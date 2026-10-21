@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+scout/inbox.jsonl
+scout/seen.json

@@ -1,0 +1,45 @@
+{
+  "contact": "",
+  "notes": [
+    "All sources are disabled until verified from an environment whose network policy allows them.",
+    "Verify each URL returns current items, read its terms of use, and set verified to true.",
+    "Tier 1: official or primary publishers. Tier 2: peer-reviewed or established research bodies. Tier 3: reputable reporting."
+  ],
+  "sources": [
+    {
+      "name": "arXiv cs.CY (computers and society), newest",
+      "url": "https://export.arxiv.org/api/query?search_query=cat:cs.CY&sortBy=submittedDate&sortOrder=descending&max_results=50",
+      "tier": "tier 2",
+      "enabled": false,
+      "verified": false
+    },
+    {
+      "name": "GAO reports",
+      "url": "https://www.gao.gov/rss/reports.xml",
+      "tier": "tier 1",
+      "enabled": false,
+      "verified": false
+    },
+    {
+      "name": "EPA news releases",
+      "url": "https://www.epa.gov/newsreleases/search/rss",
+      "tier": "tier 1",
+      "enabled": false,
+      "verified": false
+    },
+    {
+      "name": "NIST news",
+      "url": "https://www.nist.gov/news-events/news/rss.xml",
+      "tier": "tier 1",
+      "enabled": false,
+      "verified": false
+    },
+    {
+      "name": "USGS news",
+      "url": "https://www.usgs.gov/rss",
+      "tier": "tier 1",
+      "enabled": false,
+      "verified": false
+    }
+  ]
+}
