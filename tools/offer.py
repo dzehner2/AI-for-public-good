@@ -71,8 +71,36 @@ def save_offer(offer, offers_dir=OFFERS_DIR):
     slug = re.sub(r"[^a-z0-9]+", "-", offer["name"].lower()).strip("-")[:30] or "anonymous"
     # The random suffix keeps two offers from the same person in the same second from colliding.
     path = offers_dir / f"{stamp}-{slug}-{uuid.uuid4().hex[:6]}.json"
+    offer = dict(offer, id=path.stem, status="offered")
     path.write_text(json.dumps(offer, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
+
+
+# An offer moves forward only: offered -> accepted -> completed.
+# Completion needs a named project lead to confirm the help was given.
+STATUS_ORDER = ["offered", "accepted", "completed"]
+
+
+def advance_offer(offer_id, status, confirmed_by="", offers_dir=OFFERS_DIR, now=None):
+    """Move one offer forward. Raises ValueError with a plain message if the move is not allowed."""
+    if status not in STATUS_ORDER[1:]:
+        raise ValueError("status must be 'accepted' or 'completed'")
+    if status == "completed" and not confirmed_by.strip():
+        raise ValueError("completing an offer needs --confirmed-by: the project lead who confirmed the help")
+    matches = [p for p in offers_dir.glob("*.json") if p.stem == offer_id] if offers_dir.exists() else []
+    if not matches:
+        raise ValueError(f"no offer with id '{offer_id}'")
+    path = matches[0]
+    offer = json.loads(path.read_text(encoding="utf-8"))
+    current = offer.get("status", "offered")
+    if STATUS_ORDER.index(status) <= STATUS_ORDER.index(current):
+        raise ValueError(f"offer is already '{current}'; it cannot move to '{status}'")
+    offer["status"] = status
+    offer["status_updated"] = (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+    if status == "completed":
+        offer["confirmed_by"] = confirmed_by.strip()
+    path.write_text(json.dumps(offer, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return offer
 
 
 def summarize(offers_dir=OFFERS_DIR):
@@ -102,7 +130,20 @@ def main(argv=None):
 
     sub.add_parser("summary", help="count offers by project and type")
 
+    move = sub.add_parser("status", help="mark an offer accepted or completed")
+    move.add_argument("offer_id", help="the id printed when the offer was saved")
+    move.add_argument("--to", required=True, choices=STATUS_ORDER[1:])
+    move.add_argument("--confirmed-by", default="", help="required for 'completed': the project lead")
+
     args = parser.parse_args(argv)
+    if args.command == "status":
+        try:
+            advance_offer(args.offer_id, args.to, args.confirmed_by)
+        except ValueError as exc:
+            print(f"Not updated: {exc}", file=sys.stderr)
+            return 1
+        print(f"Offer {args.offer_id} is now '{args.to}'")
+        return 0
     if args.command == "add":
         try:
             offer = build_offer(args)
