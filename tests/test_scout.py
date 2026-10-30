@@ -98,17 +98,49 @@ class RunTests(unittest.TestCase):
         with mock.patch.object(scout, "urllib") as fake, \
                 mock.patch.object(scout, "write_results"), \
                 mock.patch.object(scout, "load_json", return_value=[]):
-            report, items = scout.run([{"name": "off", "url": "https://example.org/f", "enabled": False}], "")
+            report, items = scout.run([{"name": "off", "url": "https://example.org/f", "enabled": False}], "ops@example.org")
         fake.request.Request.assert_not_called()
         self.assertEqual(report, [])
         self.assertEqual(items, [])
 
     def test_robots_disallow_is_reported_not_fetched(self):
+        source = {"name": "blocked", "url": "https://example.org/f", "verified": True}
         with mock.patch.object(scout, "allowed_by_robots", return_value=False), \
                 mock.patch.object(scout, "write_results"), \
                 mock.patch.object(scout, "load_json", return_value=[]):
-            report, _ = scout.run([{"name": "blocked", "url": "https://example.org/f"}], "")
+            report, _ = scout.run([source], "ops@example.org")
         self.assertEqual(report, ["blocked: skipped, disallowed by robots.txt"])
+
+    def test_live_run_refused_without_contact(self):
+        with mock.patch.object(scout.urllib.request, "urlopen") as fake_open:
+            report, items = scout.run([{"name": "s", "url": "https://example.org/f", "verified": True}], "")
+        fake_open.assert_not_called()
+        self.assertTrue(report[0].startswith("refused"))
+        self.assertEqual(items, [])
+
+    def test_contact_is_in_user_agent(self):
+        captured = {}
+
+        def fake_request(url, headers=None, **kwargs):
+            captured["ua"] = headers["User-Agent"]
+            raise OSError("stop here")
+
+        source = {"name": "s", "url": "https://example.org/f", "verified": True}
+        with mock.patch.object(scout, "allowed_by_robots", return_value=True), \
+                mock.patch.object(scout.urllib.request, "Request", side_effect=fake_request), \
+                mock.patch.object(scout, "write_results"), \
+                mock.patch.object(scout, "load_json", return_value=[]):
+            scout.run([source], "ops@example.org")
+        self.assertIn("ops@example.org", captured["ua"])
+
+    def test_unverified_source_is_skipped(self):
+        source = {"name": "unchecked", "url": "https://example.org/f", "verified": False}
+        with mock.patch.object(scout, "allowed_by_robots") as robots, \
+                mock.patch.object(scout, "write_results"), \
+                mock.patch.object(scout, "load_json", return_value=[]):
+            report, _ = scout.run([source], "ops@example.org")
+        robots.assert_not_called()
+        self.assertEqual(report, ["unchecked: skipped, source not yet verified"])
 
     def test_fixture_mode_writes_inbox(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -162,6 +194,16 @@ class DigestTests(unittest.TestCase):
         self.write_inbox([self.item("fresh", "new")])
         scout.write_digest("2026-06-03")
         self.assertIsNone(scout.write_digest("2026-06-04"))
+
+    def test_digest_labels_unverified_sources(self):
+        unverified = self.item("unchecked", "new", tier="tier 1")
+        unverified["verified"] = False
+        verified = self.item("checked", "new", tier="tier 1")
+        verified["verified"] = True
+        self.write_inbox([unverified, verified])
+        text = scout.write_digest("2026-06-03").read_text(encoding="utf-8")
+        self.assertIn("UNVERIFIED source", text)
+        self.assertIn("verified source", text)
 
     def test_unrated_items_are_flagged(self):
         self.write_inbox([self.item("unknown", "new", tier="unrated")])

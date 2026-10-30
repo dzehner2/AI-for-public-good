@@ -56,6 +56,17 @@ Two or three sentences: what the system does and what changes as a result.
 - Stop rule:
 - Partners needed:
 
+## Help wanted
+
+Offers recorded with `tools/offer.py` for this project. Each line says what is needed and by when.
+
+- Time:
+- Expertise:
+- Resources:
+- Ideas:
+- Network:
+- Money:
+
 ## Open questions
 
 - 

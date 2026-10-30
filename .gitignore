@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 scout/inbox.jsonl
 scout/seen.json
+# Offers hold personal information. Keep them out of git and back them up somewhere private.
+offers/

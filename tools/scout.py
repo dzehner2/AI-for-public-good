@@ -124,7 +124,10 @@ def load_json(path, default):
 
 
 def run(sources, contact):
-    user_agent = f"{USER_AGENT}; {contact}" if contact else USER_AGENT
+    if not contact:
+        # Site operators must be able to reach whoever is scraping them.
+        return ["refused: set \"contact\" in scout/sources.json before a live run"], []
+    user_agent = f"{USER_AGENT}; {contact}"
     seen = set(load_json(SEEN_PATH, []))
     robots_cache = {}
     last_request = {}
@@ -133,6 +136,9 @@ def run(sources, contact):
 
     for source in sources:
         if not source.get("enabled", True):
+            continue
+        if not source.get("verified", False):
+            report.append(f"{source['name']}: skipped, source not yet verified")
             continue
         url = source["url"]
         host = urllib.parse.urlsplit(url).netloc
@@ -153,6 +159,7 @@ def run(sources, contact):
             continue
         for entry in entries:
             entry["tier"] = source.get("tier", "unrated")
+            entry["verified"] = True
         added = collect(entries, seen, new_items)
         report.append(f"{source['name']}: {len(entries)} items, {added} new matches")
 
@@ -212,8 +219,9 @@ def write_digest(day):
         out.append("")
         for item in by_domain[domain]:
             rating = item.get("tier", "unrated")
+            check = "verified source" if item.get("verified") else "UNVERIFIED source"
             note = " (source not yet rated)" if rating == "unrated" else ""
-            out.append(f"- [{item['title']}]({item['link']}) — {item['source']}, {rating}{note}")
+            out.append(f"- [{item['title']}]({item['link']}) — {item['source']}, {rating}, {check}{note}")
             if item.get("summary"):
                 out.append(f"  {item['summary']}")
         out.append("")
