@@ -109,7 +109,7 @@ async function loadAll() {
     sb.from("admins").select("user_id").eq("user_id", state.user.id),
     sb.from("comments").select("id, project_id, author_id, body, created_at").order("created_at", { ascending: true }),
     sb.rpc("list_offers"),
-    sb.from("suggestions").select("id, author_id, title, domain, body, source_url, help_needed, status, project_id, created_at").order("created_at", { ascending: true }),
+    sb.from("suggestions").select("id, author_id, origin, title, domain, body, source_url, help_needed, status, project_id, created_at").order("created_at", { ascending: true }),
     sb.rpc("hot_project_ids"),
     sb.rpc("list_messages")
   ]);
@@ -517,7 +517,7 @@ function renderReview() {
       el("h3", { text: s.title }),
       el("p", { class: "body", text: s.body }),
       el("p", { class: "meta-line", text: "Help needed: " + (s.help_needed || "not stated") }),
-      el("p", { class: "meta-line", text: "Suggested by " + nameFor(s.author_id) + fmtDate(s.created_at) }),
+      el("p", { class: "meta-line", text: (s.origin === "scout" ? "Suggested by the Scout agent from public search results. Check the source before approving" : "Suggested by " + nameFor(s.author_id)) + fmtDate(s.created_at) }),
       safeLink(s.source_url) ? el("p", { class: "sources" }, [el("a", { href: safeLink(s.source_url), target: "_blank", rel: "noopener noreferrer", text: "Source" })]) : null,
       el("div", { class: "actions" }, [approve, decline]),
       status
