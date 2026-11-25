@@ -72,4 +72,13 @@ on conflict do nothing;
   or stores the friend's address. There is also a Copy button for other messaging apps.
 - While the site sits behind Vercel login, links in these emails will not open for friends.
   They will work once the site is public.
+- Each course has two diagrams built from its own text, so they always match: the parts of the
+  skill, and a learning-path flowchart of the steps ending at the stake. They follow the page's
+  light or dark theme and have text labels for screen readers.
+- Each course has a Watch section. 97 courses link one or two YouTube videos (181 in all), found by
+  search, checked with YouTube's oEmbed service, and reviewed by hand. Safety-sensitive courses use
+  official sources where possible (American Heart Association, American Red Cross, St John
+  Ambulance, Parks Canada, STIHL, OSHA, Husqvarna, NSSF, BoatUS). Every course also has a
+  "More videos on YouTube" search link. Break Down a Door has no picked video on purpose.
+  Picks live in `site/assets/skills/videos.js`; videos can disappear, so re-check them now and then.
 - Donations and the teacher interview are on the roadmap (`docs/roadmap.md`), not built.

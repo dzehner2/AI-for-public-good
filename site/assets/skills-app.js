@@ -1,6 +1,9 @@
 // Useful Skills: a list of 100 skills, a DiSSS course for each, and a stake to email to a friend.
 // No sign-in and no server: the email opens in the visitor's own email app, and nothing is stored.
 import { SKILLS, CATEGORIES, GENERIC_STAKES } from "./skills/index.js";
+import { VIDEOS } from "./skills/videos.js";
+
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 const $ = id => document.getElementById(id);
 const state = { filter: "All", query: "" };
@@ -64,6 +67,86 @@ function renderList() {
       el("span", { class: "more", text: "Open the course" })
     ]));
   }
+}
+
+// ---------- Diagram ----------
+
+// Wrap text into lines of at most `max` characters, breaking on spaces.
+function wrap(text, max) {
+  const lines = [];
+  let line = "";
+  for (const word of text.split(/\s+/)) {
+    if ((line + " " + word).trim().length > max && line) { lines.push(line); line = word; }
+    else line = (line + " " + word).trim();
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function svg(tag, attrs, children) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) node.setAttribute(k, v);
+  for (const c of children || []) node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  return node;
+}
+
+// A flowchart of the learning path: the Sequencing steps in order, ending at the stake.
+// Built from the course text, so it always matches the steps above it.
+function learningPathDiagram(skill) {
+  const W = 360, X = 52, BOX_W = 292, LINE = 18, PAD = 10, GAP = 26, MAX = 36;
+  const steps = skill.q.map((text, i) => ({ label: String(i + 1), lines: wrap(text, MAX) }));
+  steps.push({ label: "★", lines: wrap("Stake: show a friend what you learned by your date.", MAX), stake: true });
+  let y = 8;
+  const parts = [];
+  steps.forEach((st, i) => {
+    const h = st.lines.length * LINE + PAD * 2;
+    parts.push(svg("rect", { x: X, y, width: BOX_W, height: h, rx: 8, class: st.stake ? "dg-box dg-stake" : "dg-box" }));
+    parts.push(svg("circle", { cx: 24, cy: y + h / 2, r: 15, class: st.stake ? "dg-num dg-stake-num" : "dg-num" }));
+    parts.push(svg("text", { x: 24, y: y + h / 2 + 5, "text-anchor": "middle", class: "dg-num-text" }, [st.label]));
+    st.lines.forEach((ln, j) => parts.push(svg("text", { x: X + 12, y: y + PAD + 13 + j * LINE, class: "dg-text" }, [ln])));
+    if (i < steps.length - 1) {
+      const ay = y + h;
+      parts.push(svg("line", { x1: 24, y1: y + h / 2 + 15, x2: 24, y2: ay + GAP + 4, class: "dg-line" }));
+      parts.push(svg("path", { d: `M ${X + BOX_W / 2 - 6} ${ay + 6} L ${X + BOX_W / 2} ${ay + GAP - 6} L ${X + BOX_W / 2 + 6} ${ay + 6}`, class: "dg-arrow" }));
+    }
+    y += h + GAP;
+  });
+  const height = y - GAP + 8;
+  const label = "Learning path for " + skill.name + ": " + skill.q.map((t, i) => `step ${i + 1}, ${t}`).join("; ") + "; then set your stake.";
+  const node = svg("svg", { viewBox: `0 0 ${W} ${height}`, role: "img", "aria-label": label, class: "diagram" },
+    [svg("title", {}, ["Learning path: " + skill.name]), ...parts]);
+  return el("figure", { class: "course-diagram" }, [node, el("figcaption", { text: "Learning path: work through the steps in order, then set your stake." })]);
+}
+
+// The parts of the skill, with the vital few from Selection listed beside them.
+function partsDiagram(skill) {
+  return el("figure", { class: "parts-diagram" }, [
+    el("div", { class: "parts-hub", text: skill.name }),
+    el("ul", { class: "parts-list" }, skill.d.map(part => el("li", { text: part }))),
+    el("figcaption", { text: "The parts of the skill. Selection (below) picks the few that matter most." })
+  ]);
+}
+
+// ---------- Videos ----------
+
+function videosSection(skill) {
+  const entry = VIDEOS[skill.id] || { q: "how to " + skill.name, list: [] };
+  const search = "https://www.youtube.com/results?search_query=" + encodeURIComponent(entry.q);
+  const items = entry.list.map(v => el("li", { class: "video" }, [
+    el("a", { href: "https://www.youtube.com/watch?v=" + encodeURIComponent(v.v), target: "_blank", rel: "noopener noreferrer", class: "video-link" }, [
+      el("img", { src: "https://i.ytimg.com/vi/" + encodeURIComponent(v.v) + "/mqdefault.jpg", alt: "", loading: "lazy", width: "160", height: "90" }),
+      el("span", { class: "video-text" }, [el("span", { class: "video-title", text: v.title }), el("span", { class: "video-channel", text: v.channel })])
+    ])
+  ]));
+  return el("section", { class: "course-step videos" }, [
+    el("h2", { text: "Watch" }),
+    el("p", { class: "what", text: items.length
+      ? "Videos made by others that show the steps. They open on YouTube."
+      : "We haven't picked a video for this skill yet." }),
+    items.length ? el("ul", { class: "video-list" }, items) : null,
+    el("p", {}, [el("a", { href: search, target: "_blank", rel: "noopener noreferrer", text: "More videos on YouTube" })]),
+    skill.safety ? el("p", { class: "note", text: "Videos are no substitute for hands-on training from a certified instructor." }) : null
+  ]);
 }
 
 // ---------- Course ----------
@@ -178,8 +261,11 @@ function renderCourse(id) {
     el("p", { class: "lede", text: "Time to learn: " + skill.time }),
     skill.safety ? el("p", { class: "safety" }, [el("strong", { text: "Safety: " }), skill.safety]) : null,
     step("1. Deconstruction", "The parts this skill is made of.", skill.d, false),
+    partsDiagram(skill),
     step("2. Selection", "The few parts that matter most. Get these right first.", skill.s, false),
     step("3. Sequencing", "Learn in this order.", skill.q, true),
+    learningPathDiagram(skill),
+    videosSection(skill),
     renderStakes(skill)
   );
 }

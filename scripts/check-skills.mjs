@@ -1,6 +1,7 @@
 // Checks the Useful Skills course data: 100 skills, unique ids, every DiSSS part present,
 // known categories, and the right numbering. Run: node scripts/check-skills.mjs
 import { SKILLS, CATEGORIES, GENERIC_STAKES } from "../site/assets/skills/index.js";
+import { VIDEOS } from "../site/assets/skills/videos.js";
 
 const problems = [];
 if (SKILLS.length !== 100) problems.push(`expected 100 skills, found ${SKILLS.length}`);
@@ -20,10 +21,18 @@ SKILLS.forEach((s, i) => {
   const text = JSON.stringify(s);
   if (/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(text)) problems.push(`${s.id}: contains an email address`);
 });
+for (const s of SKILLS) {
+  const v = VIDEOS[s.id];
+  if (!v || !v.q) { problems.push(`${s.id}: no video search entry`); continue; }
+  for (const item of v.list) {
+    if (!/^[A-Za-z0-9_-]{11}$/.test(item.v)) problems.push(`${s.id}: bad YouTube id ${item.v}`);
+    if (!item.title || !item.channel) problems.push(`${s.id}: video missing title or channel`);
+  }
+}
 if (GENERIC_STAKES.length < 3) problems.push("need at least 3 generic stakes");
 const firstAid = SKILLS.filter(s => s.cat === "First aid");
 for (const s of firstAid) if (!s.safety) problems.push(`${s.id}: first aid course without a safety note`);
 
-console.log(`${SKILLS.length} skills, ${SKILLS.filter(s => s.safety).length} with safety notes, ${new Set(SKILLS.map(s => s.cat)).size} categories`);
+console.log(`${SKILLS.length} skills, ${SKILLS.filter(s => s.safety).length} with safety notes, ${new Set(SKILLS.map(s => s.cat)).size} categories, ${Object.values(VIDEOS).reduce((n, v) => n + v.list.length, 0)} videos`);
 if (problems.length) { console.log(problems.join("\n")); process.exit(1); }
 console.log("All skill checks passed.");
