@@ -1,0 +1,770 @@
+<title>Community Ideas Commons</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one column. A list of projects, a page for each project with its offers and comments, and a form to suggest a new project. */
+:root {
+  --bg: #f5f2ea;
+  --surface: #fffdf8;
+  --ink: #1d2320;
+  --muted: #5d655f;
+  --accent: #2c6654;
+  --accent-ink: #fffdf8;
+  --line: #d9d3c4;
+  --focus: #b5651d;
+  --hot: #a4461f;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161a18;
+    --surface: #1f2421;
+    --ink: #ece9e0;
+    --muted: #a7aea8;
+    --accent: #7fc2ad;
+    --accent-ink: #14201b;
+    --line: #343d38;
+    --focus: #e0a163;
+    --hot: #f0a27e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161a18;
+  --surface: #1f2421;
+  --ink: #ece9e0;
+  --muted: #a7aea8;
+  --accent: #7fc2ad;
+  --accent-ink: #14201b;
+  --line: #343d38;
+  --focus: #e0a163;
+  --hot: #f0a27e;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Libre Franklin", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+main { max-width: 720px; margin: 0 auto; min-width: 0; }
+h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: 2rem; margin: 0 0 8px; }
+h2 { font-size: 1.35rem; margin: 6px 0 10px; }
+h3 { font-size: 1.1rem; margin: 0 0 6px; }
+p { margin: 0 0 12px; text-wrap: pretty; }
+a { color: var(--accent); text-underline-offset: 2px; overflow-wrap: anywhere; }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.lede { color: var(--muted); font-size: 1.05rem; }
+.note { font-size: 0.9rem; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
+.notice { font-size: 0.92rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; margin-top: 14px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 16px 0 4px; font-size: 0.95rem; }
+nav a { font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 6px; }
+.chip { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.grid { display: grid; gap: 14px; margin-top: 16px; }
+.card { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; color: var(--ink); text-decoration: none; }
+.card:hover { border-color: var(--accent); }
+.card h3 { color: var(--ink); }
+.card .summary { color: var(--muted); font-size: 0.96rem; margin: 0 0 10px; }
+.card .meta { font-size: 0.85rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.card .more { color: var(--accent); font-weight: 600; font-size: 0.92rem; margin-top: 10px; display: inline-block; }
+.domain { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 4px; font-weight: 600; }
+.hot { color: var(--hot); font-weight: 700; }
+.sources, .channels { font-size: 0.92rem; color: var(--muted); margin: 0 0 6px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-top: 16px; min-width: 0; }
+.panel h2 { margin-top: 0; }
+.back { display: inline-block; margin-bottom: 14px; font-weight: 600; }
+.entry { border-bottom: 1px solid var(--line); padding: 10px 0; min-width: 0; }
+.entry:last-child { border-bottom: 0; }
+.meta-line { font-size: 0.82rem; color: var(--muted); margin: 0 0 4px; }
+.body { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
+.empty { font-size: 0.92rem; color: var(--muted); margin: 6px 0 10px; }
+form { display: grid; gap: 10px; margin-top: 12px; }
+label { font-size: 0.92rem; font-weight: 600; }
+input, select, textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 10px; width: 100%; box-sizing: border-box; min-width: 0;
+}
+textarea { min-height: 84px; }
+.check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.check input { width: auto; }
+button.primary, button.secondary {
+  font: inherit; font-weight: 600; border-radius: 6px; padding: 9px 16px; cursor: pointer; justify-self: start;
+}
+button.primary { background: var(--accent); color: var(--accent-ink); border: 0; }
+button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button:disabled { opacity: 0.6; cursor: default; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.status { font-size: 0.88rem; color: var(--muted); min-height: 1.2em; margin: 0; }
+.scratch { border-style: dashed; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<main>
+  <header>
+    <h1>Community Ideas Commons</h1>
+    <p class="lede">Projects and questions drawn from public sources on AI's water, energy, land, and community effects. Each project links to where it came from. Offer help, leave a comment, or suggest a new project for the team to review.</p>
+    <nav aria-label="Pages">
+      <a href="#">All projects</a>
+      <a href="#suggest">Suggest a project</a>
+      <a href="#review" id="nav-review" hidden>Review suggestions</a>
+    </nav>
+    <p class="note">Descriptions come from search results and public summaries, not full reading of each source. Check each source before relying on it.</p>
+    <div id="notice" class="notice" hidden></div>
+  </header>
+
+  <!-- All projects -->
+  <section id="view-list" aria-label="Projects">
+    <div class="chips" id="chips" role="group" aria-label="Filter by area"></div>
+    <div class="grid" id="cards"></div>
+    <a class="card scratch" href="#project-scratchpad" style="margin-top:14px">
+      <p class="domain">General</p>
+      <h3>Scratch pad</h3>
+      <p class="summary">Open thoughts that don't fit a project yet. Post a note and see what others are noticing.</p>
+      <span class="more">Open the scratch pad</span>
+    </a>
+  </section>
+
+  <!-- One project -->
+  <section id="view-project" aria-live="off" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div id="project-head"></div>
+
+    <div class="panel" id="offer-panel">
+      <h2>Offer help</h2>
+      <p class="note">Offers are visible to everyone who can open this page. Don't include contact details here. The team will reach out through your profile if you've agreed.</p>
+      <div id="offer-signin" class="status" hidden>Sign in to offer help.</div>
+      <form id="offer-form">
+        <label for="offer-type">What kind of help?</label>
+        <select id="offer-type">
+          <option value="time">Time</option>
+          <option value="expertise">Expertise</option>
+          <option value="resources">Resources</option>
+          <option value="ideas">Ideas</option>
+          <option value="network">Network</option>
+          <option value="money">Money</option>
+        </select>
+        <label for="offer-details">What you can offer</label>
+        <textarea id="offer-details" maxlength="1000" placeholder="For example: I can review the scoring method for two hours a month."></textarea>
+        <label for="offer-available">When you're available (optional)</label>
+        <input id="offer-available" maxlength="120" placeholder="For example: evenings">
+        <label class="check"><input type="checkbox" id="offer-anon"> Show my offer as "Someone"</label>
+        <div class="actions"><button type="submit" class="primary" id="offer-submit">Offer help</button></div>
+        <p class="status" id="offer-status" aria-live="polite"></p>
+      </form>
+      <h3 style="margin-top:18px">Offers so far</h3>
+      <div id="offers-list"></div>
+    </div>
+
+    <div class="panel" id="comment-panel">
+      <h2>Comments</h2>
+      <div id="comments-list"></div>
+      <div id="comment-signin" class="status" hidden>Sign in to comment.</div>
+      <form id="comment-form">
+        <label for="comment-text">Add a comment</label>
+        <textarea id="comment-text" maxlength="2000" placeholder="What do you know, what would you change, what is missing?"></textarea>
+        <div class="actions"><button type="submit" class="primary" id="comment-submit">Post comment</button></div>
+        <p class="status" id="comment-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Suggest a project -->
+  <section id="view-suggest" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div class="panel">
+      <h2>Suggest a project</h2>
+      <p class="note">The team reviews every suggestion. Approved projects appear on the list with the name of the person who suggested them, unless you ask us not to show it.</p>
+      <div id="suggest-signin" class="status" hidden>Sign in to suggest a project.</div>
+      <form id="suggest-form">
+        <label for="suggest-title">Project title</label>
+        <input id="suggest-title" maxlength="120" placeholder="A short name for the project">
+        <label for="suggest-domain">Area</label>
+        <select id="suggest-domain">
+          <option>Water</option>
+          <option>Air</option>
+          <option>Land</option>
+          <option>Energy</option>
+          <option>Community</option>
+          <option>Cognition</option>
+          <option>Other</option>
+        </select>
+        <label for="suggest-body">What is the project, and why does it matter?</label>
+        <textarea id="suggest-body" maxlength="1500"></textarea>
+        <label for="suggest-source">A public source (optional, starts with https://)</label>
+        <input id="suggest-source" maxlength="300" placeholder="https://">
+        <label for="suggest-help">What help would it need?</label>
+        <textarea id="suggest-help" maxlength="600"></textarea>
+        <div class="actions"><button type="submit" class="primary" id="suggest-submit">Send suggestion</button></div>
+        <p class="status" id="suggest-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Team review -->
+  <section id="view-review" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div class="panel">
+      <h2>Review suggestions</h2>
+      <p class="note">Approving a suggestion adds it to the project list. Declining keeps it on record. Only team members see this page's review controls.</p>
+      <div id="review-list"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+// Built-in projects. Team-approved suggestions are added on top of these from the shared store.
+const BUILT_IN = [
+  {
+    id: "water-disclosure-checklist",
+    domain: "Water",
+    title: "A resident checklist for data center water questions",
+    body: "A one-page list of questions residents can bring to a hearing: expected water draw, its source, what happens in drought, and what is reported publicly. Adapted from a playbook the Great Lakes Commission published for residents.",
+    sources: [{ name: "Great Lakes Commission playbook", url: "https://greatlakes.org/?p=24470" }],
+    channels: ["Material: writing and review", "Network: local groups"]
+  },
+  {
+    id: "benefit-agreement-register",
+    domain: "Community",
+    title: "A public register of data center benefit agreements",
+    body: "Researchers at the Foundation for American Security found eight executed agreements only by searching for them, because many developer and municipal talks run under NDAs. A public register would let residents compare terms across towns.",
+    sources: [{ name: "Foundation for American Security", url: "https://fas.org/?p=47528" }],
+    channels: ["Material: research", "Network: municipal contacts"]
+  },
+  {
+    id: "water-estimate-reconciliation",
+    domain: "Water",
+    title: "Explain why national data center water estimates disagree",
+    body: "Published estimates of 2023 data center water use differ widely, from about 17 billion gallons in one study to about 228 billion in a GMFUS analysis. A short method comparison would help readers tell which figure to trust. The source of the lower figure still needs locating.",
+    sources: [{ name: "GMFUS: Water and the AI Infrastructure Boom", url: "https://www.gmfus.org/news/water-and-ai-infrastructure-boom" }],
+    channels: ["Material: data analysis", "Monetary: research time"]
+  },
+  {
+    id: "utility-flexibility-pilot",
+    domain: "Energy and air",
+    title: "A utility pilot for flexible computing during grid stress",
+    body: "Google reports that it limits non-urgent work at its data centers when grid operator partners warn of supply shortfalls. A smaller regional utility and a local compute provider could test a version of this and publish the results.",
+    sources: [{ name: "Google Cloud: demand response", url: "https://cloud.google.com/blog/products/infrastructure/using-demand-response-to-reduce-data-center-power-consumption" }],
+    channels: ["Network: utility contacts", "Monetary: pilot funding"]
+  },
+  {
+    id: "water-reporting-tracker",
+    domain: "Water",
+    title: "Track state laws requiring data center water reporting",
+    body: "New Jersey now requires data centers to report water and energy use to state regulators every six months, and more than a dozen states were weighing similar laws in 2026. A regular summary for members would keep the community current.",
+    sources: [{ name: "GoodGoodGood: New Jersey law", url: "https://www.goodgoodgood.co/articles/new-jersey-data-center-law-report-water-and-energy-use" }],
+    channels: ["Material: monitoring", "Network: state policy contacts"]
+  },
+  {
+    id: "forums-with-a-university",
+    domain: "Community",
+    title: "Public ethics forums run with a local university",
+    body: "Quinnipiac University's ETHOS initiative holds public forums on AI's civic effects in which students learn from community concerns and residents contribute professional perspectives. The reciprocal format could be copied locally.",
+    sources: [{ name: "Quinnipiac ETHOS", url: "https://www.qu.edu/info-for/ethical-technology-use-through-humanities-outreach-and-shared-learning/" }],
+    channels: ["Material: facilitation", "Network: university contacts"]
+  },
+  {
+    id: "community-data-labels",
+    domain: "Community and Indigenous knowledge",
+    title: "Community-set labels for AI use of local data",
+    body: "A paper argues that Local Contexts Traditional Knowledge and Biocultural labels could guide how generative AI uses community knowledge. A warning from the Native Nations Institute applies: labels do not replace asking the community directly, so any pilot should start with knowledge partners.",
+    sources: [
+      { name: "Recal: Local Contexts labels and generative AI", url: "https://recal.rcaap.pt/recal/article/download/65/45/337" },
+      { name: "Native Nations Institute: CARE principles", url: "https://www.nni.arizona.edu/news/acta-borealia-care-principles-ten-years-in" }
+    ],
+    channels: ["Material: knowledge partnership", "Network: Indigenous data networks"]
+  },
+  {
+    id: "offloading-replication",
+    domain: "Cognition",
+    title: "Replicate the critical-thinking and AI use findings",
+    body: "A 2025 study in Societies (Gerlich) surveyed 666 people and found an association between heavier AI use and weaker critical thinking, with cognitive offloading as the likely mechanism. It is correlational, and the search found no independent replication. A preregistered replication with an experiment would test whether the link holds.",
+    sources: [{ name: "PsyPost summary of the study", url: "https://www.psypost.org/ai-tools-may-weaken-critical-thinking-skills-by-encouraging-cognitive-offloading-study-suggests" }],
+    channels: ["Material: study design", "Monetary: study funding"]
+  },
+  {
+    id: "city-peer-exchange",
+    domain: "Community",
+    title: "Peer exchange among cities on AI and data governance",
+    body: "Cities for Digital Rights runs an AI and Data community of practice for member cities, with policy monitoring through the Global Observatory of Urban AI. A local group could join or adapt the format for towns in its region.",
+    sources: [{ name: "Cities for Digital Rights", url: "https://citiesfordigitalrights.org/node/273" }],
+    channels: ["Network: city officials", "Material: sharing notes"]
+  },
+  {
+    id: "participatory-infrastructure-workshops",
+    domain: "Community",
+    title: "Workshops that surface local concerns about AI infrastructure",
+    body: "A conference paper describes participatory workshops with local organizations to surface community concerns about AI infrastructure for local governance. The method could be reused in a host community before a hearing.",
+    sources: [{ name: "AAAI/AIES extended abstract", url: "https://ojs.aaai.org/index.php/AIES/article/download/43361/50921/47467" }],
+    channels: ["Material: facilitation", "Network: community organizations"]
+  }
+];
+
+const SCRATCH_ID = "scratchpad";
+const HOT_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const HOT_MIN_PEOPLE = 3;
+const DOMAINS = ["All", "Water", "Air", "Energy", "Land", "Community", "Cognition"];
+
+const state = {
+  db: null,
+  user: null,
+  uid: null,
+  canEdit: false,
+  builtIn: BUILT_IN,
+  added: {},        // projects approved by the team, from the shared store
+  comments: [],
+  offers: [],
+  suggestions: [],
+  profiles: {},
+  filter: "All",
+  renderedRoute: null
+};
+
+const $ = id => document.getElementById(id);
+
+function el(tag, attrs, children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs || {})) {
+    if (key === "class") node.className = value;
+    else if (key === "text") node.textContent = value;
+    else node.setAttribute(key, value);
+  }
+  for (const child of children || []) {
+    node.append(child instanceof Node ? child : document.createTextNode(child));
+  }
+  return node;
+}
+
+function setNotice(message) {
+  $("notice").textContent = message;
+  $("notice").hidden = !message;
+}
+
+function allProjects() {
+  const byId = {};
+  for (const p of state.builtIn) byId[p.id] = p;
+  for (const id of Object.keys(state.added)) byId[id] = state.added[id];
+  return byId;
+}
+
+function nameFor(uid, anonymous) {
+  if (anonymous) return "Someone";
+  const profile = state.profiles[uid];
+  return (profile && profile.name) || "Someone";
+}
+
+function safeLink(url) {
+  return typeof url === "string" && /^https:\/\//.test(url) ? url : null;
+}
+
+function messageFor(err) {
+  switch (err && err.code) {
+    case "invalid_argument": return "Your access here does not allow this. Ask the team for access.";
+    case "resource_exhausted": return "Too many posts at once. Try again in a moment.";
+    case "quota_exceeded": return "The shared store is full. Tell the team.";
+    case "not_granted":
+    case "capability_disabled":
+    case "capability_removed": return "This action is unavailable in this view.";
+    default: return "Could not save. Try again.";
+  }
+}
+
+function recentOffersByProject(now) {
+  const people = {};
+  for (const offer of state.offers) {
+    const when = Date.parse(offer.created);
+    if (!offer.authorId || isNaN(when) || now - when > HOT_WINDOW_MS) continue;
+    (people[offer.ideaId] ||= new Set()).add(offer.authorId);
+  }
+  return people;
+}
+
+function isHot(projectId, now) {
+  const people = recentOffersByProject(now)[projectId];
+  return !!people && people.size >= HOT_MIN_PEOPLE;
+}
+
+function countFor(list, projectId) {
+  return list.filter(item => item.ideaId === projectId).length;
+}
+
+// ---------- Views ----------
+
+function showView(name) {
+  for (const view of ["list", "project", "suggest", "review"]) {
+    $("view-" + view).hidden = view !== name;
+  }
+}
+
+function renderChips() {
+  const chips = $("chips");
+  chips.replaceChildren();
+  for (const area of DOMAINS) {
+    const button = el("button", { type: "button", class: "chip", "aria-pressed": String(state.filter === area), text: area });
+    button.addEventListener("click", () => { state.filter = area; renderList(); });
+    chips.append(button);
+  }
+}
+
+function matchesFilter(project) {
+  if (state.filter === "All") return true;
+  return (project.domain || "").toLowerCase().includes(state.filter.toLowerCase());
+}
+
+function renderList() {
+  renderChips();
+  const cards = $("cards");
+  cards.replaceChildren();
+  const now = Date.now();
+  const projects = Object.values(allProjects()).filter(matchesFilter);
+  if (!projects.length) {
+    cards.append(el("p", { class: "empty", text: "No projects in this area yet. Suggest one." }));
+  }
+  for (const project of projects) {
+    const comments = countFor(state.comments, project.id);
+    const offers = countFor(state.offers, project.id);
+    const meta = [
+      el("span", { text: `${comments} comment${comments === 1 ? "" : "s"}` }),
+      el("span", { text: `${offers} offer${offers === 1 ? "" : "s"}` })
+    ];
+    if (isHot(project.id, now)) meta.unshift(el("span", { class: "hot", text: "Hot: several people are offering help" }));
+    cards.append(el("a", { class: "card", href: "#project-" + project.id }, [
+      el("p", { class: "domain", text: project.domain }),
+      el("h3", { text: project.title }),
+      el("p", { class: "summary", text: (project.body || "").slice(0, 180) + ((project.body || "").length > 180 ? "…" : "") }),
+      el("div", { class: "meta" }, meta),
+      el("span", { class: "more", text: "Open project and offer help" })
+    ]));
+  }
+}
+
+function renderProjectHead(project) {
+  const head = $("project-head");
+  head.replaceChildren();
+  head.append(
+    el("p", { class: "domain", text: project.domain }),
+    el("h1", { text: project.title }),
+    el("p", { text: project.body })
+  );
+  if (project.channels && project.channels.length) {
+    head.append(el("p", { class: "channels", text: "Where people could help: " + project.channels.join(" · ") }));
+  }
+  if (project.sources && project.sources.length) {
+    const line = el("p", { class: "sources" }, ["Sources: "]);
+    project.sources.forEach((source, i) => {
+      if (i) line.append(", ");
+      const href = safeLink(source.url);
+      if (href) line.append(el("a", { href, target: "_blank", rel: "noopener noreferrer", text: source.name }));
+      else line.append(source.name);
+    });
+    head.append(line);
+  }
+  const now = Date.now();
+  if (isHot(project.id, now)) head.append(el("p", { class: "hot", text: "Hot: several people have offered help in the last 30 days." }));
+}
+
+function renderOffers(projectId) {
+  const list = $("offers-list");
+  list.replaceChildren();
+  const offers = state.offers.filter(o => o.ideaId === projectId).sort((a, b) => String(a.created).localeCompare(String(b.created)));
+  if (!offers.length) list.append(el("p", { class: "empty", text: "No offers yet. Be the first to offer help." }));
+  for (const offer of offers) {
+    const when = new Date(offer.created);
+    list.append(el("div", { class: "entry" }, [
+      el("p", { class: "meta-line", text: `${nameFor(offer.authorId, offer.anonymous)} offered ${offer.type}` + (isNaN(when) ? "" : ` · ${when.toLocaleDateString()}`) }),
+      el("p", { class: "body", text: offer.details }),
+      ...(offer.available ? [el("p", { class: "meta-line", text: "Available: " + offer.available })] : [])
+    ]));
+  }
+}
+
+function renderComments(projectId) {
+  const list = $("comments-list");
+  list.replaceChildren();
+  const comments = state.comments.filter(c => c.ideaId === projectId).sort((a, b) => String(a.created).localeCompare(String(b.created)));
+  if (!comments.length) list.append(el("p", { class: "empty", text: "No comments yet." }));
+  for (const comment of comments) {
+    const when = new Date(comment.created);
+    list.append(el("div", { class: "entry" }, [
+      el("p", { class: "meta-line", text: `${nameFor(comment.authorId)}` + (isNaN(when) ? "" : ` · ${when.toLocaleDateString()}`) }),
+      el("p", { class: "body", text: comment.body })
+    ]));
+  }
+}
+
+// The project page keeps its forms in place, so a live update never clears what someone is typing.
+function renderProject(projectId) {
+  const project = allProjects()[projectId] || (projectId === SCRATCH_ID ? { id: SCRATCH_ID, domain: "General", title: "Scratch pad", body: "Open thoughts that don't fit a project yet. Post a note and see what others are noticing." } : null);
+  if (!project) {
+    showView("project");
+    $("project-head").replaceChildren(el("h1", { text: "Project not found" }), el("p", { text: "It may have been removed. Go back to the list." }));
+    $("offer-panel").hidden = true;
+    $("comment-panel").hidden = true;
+    return;
+  }
+  showView("project");
+  $("offer-panel").hidden = projectId === SCRATCH_ID;
+  if (state.renderedRoute !== "project-" + projectId) {
+    renderProjectHead(project);
+    state.renderedRoute = "project-" + projectId;
+  }
+  renderProjectForms();
+  if (projectId !== SCRATCH_ID) renderOffers(projectId);
+  renderComments(projectId);
+  // Refresh the header's "hot" line when offers change.
+  const hot = project.id && isHot(project.id, Date.now());
+  const existing = $("project-head").querySelector(".hot");
+  if (hot && !existing) $("project-head").append(el("p", { class: "hot", text: "Hot: several people have offered help in the last 30 days." }));
+  if (!hot && existing) existing.remove();
+}
+
+function projectIdFromHash() {
+  return decodeURIComponent(location.hash.slice(1)).replace(/^project-/, "");
+}
+
+function renderProjectForms() {
+  const signedIn = !!state.uid;
+  $("offer-signin").hidden = signedIn;
+  $("offer-form").hidden = !signedIn;
+  $("comment-signin").hidden = signedIn;
+  $("comment-form").hidden = !signedIn;
+}
+
+function renderSuggest() {
+  const signedIn = !!state.uid;
+  $("suggest-signin").hidden = signedIn;
+  $("suggest-form").hidden = !signedIn;
+}
+
+function renderReview() {
+  $("nav-review").hidden = !state.canEdit;
+  const list = $("review-list");
+  list.replaceChildren();
+  if (!state.canEdit) {
+    list.append(el("p", { class: "empty", text: "Only team members can review suggestions." }));
+    return;
+  }
+  const pending = state.suggestions.filter(s => s.status === "pending").sort((a, b) => String(a.created).localeCompare(String(b.created)));
+  if (!pending.length) list.append(el("p", { class: "empty", text: "No suggestions waiting for review." }));
+  for (const s of pending) {
+    const status = el("p", { class: "status" });
+    const approve = el("button", { type: "button", class: "primary", text: "Approve" });
+    const decline = el("button", { type: "button", class: "secondary", text: "Decline" });
+    approve.addEventListener("click", () => decide(s, "approved", approve, decline, status));
+    decline.addEventListener("click", () => decide(s, "declined", approve, decline, status));
+    list.append(el("div", { class: "entry" }, [
+      el("p", { class: "domain", text: s.domain }),
+      el("h3", { text: s.title }),
+      el("p", { class: "body", text: s.body }),
+      el("p", { class: "meta-line", text: "Help needed: " + (s.helpNeeded || "not stated") }),
+      el("p", { class: "meta-line", text: "Suggested by " + nameFor(s.authorId) }),
+      ...(s.sourceUrl ? [el("p", { class: "sources" }, [el("a", { href: safeLink(s.sourceUrl) || "#", target: "_blank", rel: "noopener noreferrer", text: "Source" })])] : []),
+      el("div", { class: "actions" }, [approve, decline]),
+      status
+    ]));
+  }
+}
+
+async function decide(s, decision, approve, decline, status) {
+  approve.disabled = decline.disabled = true;
+  status.textContent = "";
+  try {
+    if (decision === "approved") {
+      const id = uniqueId(slugify(s.title));
+      await state.db.collection("projects").doc(id).set({
+        title: s.title,
+        domain: s.domain,
+        body: s.body,
+        sources: s.sourceUrl && safeLink(s.sourceUrl) ? [{ name: "Suggested source", url: s.sourceUrl }] : [],
+        channels: s.helpNeeded ? [s.helpNeeded] : [],
+        suggestionId: s.id,
+        created: new Date().toISOString()
+      });
+      await state.db.collection("suggestions").doc(s.id).update({ status: "approved", projectId: id });
+    } else {
+      await state.db.collection("suggestions").doc(s.id).update({ status: "declined" });
+    }
+  } catch (err) {
+    status.textContent = messageFor(err);
+    approve.disabled = decline.disabled = false;
+  }
+}
+
+function slugify(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "project";
+}
+
+function uniqueId(base) {
+  const taken = allProjects();
+  let id = base, n = 2;
+  while (taken[id] || state.suggestions.some(s => s.projectId === id)) id = `${base}-${n++}`;
+  return id;
+}
+
+// ---------- Routing ----------
+
+function route() {
+  const hash = decodeURIComponent(location.hash.slice(1));
+  $("nav-review").hidden = !state.canEdit;
+  if (hash.startsWith("project-")) {
+    renderProject(projectIdFromHash());
+  } else if (hash === "suggest") {
+    showView("suggest");
+    renderSuggest();
+  } else if (hash === "review") {
+    showView("review");
+    renderReview();
+  } else {
+    showView("list");
+    renderList();
+  }
+  state.renderedRoute = hash;
+}
+
+// ---------- Writes ----------
+
+function requireSignIn(statusEl) {
+  if (!state.db) { statusEl.textContent = "This action is unavailable in this view."; return false; }
+  if (!state.uid) { statusEl.textContent = "Sign in to do this."; return false; }
+  return true;
+}
+
+async function postComment(event) {
+  event.preventDefault();
+  const status = $("comment-status");
+  const text = $("comment-text").value.trim();
+  if (!text || !requireSignIn(status)) return;
+  const projectId = projectIdFromHash();
+  $("comment-submit").disabled = true;
+  status.textContent = "";
+  try {
+    await state.db.collection("comments").add({ ideaId: projectId, authorId: state.uid, body: text, created: new Date().toISOString() });
+    $("comment-text").value = "";
+    status.textContent = "Posted.";
+  } catch (err) {
+    status.textContent = messageFor(err);
+  } finally {
+    $("comment-submit").disabled = false;
+  }
+}
+
+async function postOffer(event) {
+  event.preventDefault();
+  const status = $("offer-status");
+  const details = $("offer-details").value.trim();
+  if (!details) { status.textContent = "Say what you can offer."; return; }
+  if (!requireSignIn(status)) return;
+  const projectId = projectIdFromHash();
+  $("offer-submit").disabled = true;
+  status.textContent = "";
+  try {
+    await state.db.collection("offers").add({
+      ideaId: projectId,
+      authorId: state.uid,
+      type: $("offer-type").value,
+      details,
+      available: $("offer-available").value.trim(),
+      anonymous: $("offer-anon").checked,
+      created: new Date().toISOString(),
+      status: "offered"
+    });
+    $("offer-details").value = "";
+    $("offer-available").value = "";
+    $("offer-anon").checked = false;
+    status.textContent = "Thanks. Your offer is recorded, and the team can reach you through your profile.";
+  } catch (err) {
+    status.textContent = messageFor(err);
+  } finally {
+    $("offer-submit").disabled = false;
+  }
+}
+
+async function postSuggestion(event) {
+  event.preventDefault();
+  const status = $("suggest-status");
+  const title = $("suggest-title").value.trim();
+  const body = $("suggest-body").value.trim();
+  const source = $("suggest-source").value.trim();
+  if (!title || !body) { status.textContent = "Add a title and a description."; return; }
+  if (source && !safeLink(source)) { status.textContent = "The source must start with https://"; return; }
+  if (!requireSignIn(status)) return;
+  $("suggest-submit").disabled = true;
+  status.textContent = "";
+  try {
+    await state.db.collection("suggestions").add({
+      title,
+      domain: $("suggest-domain").value,
+      body,
+      sourceUrl: source || "",
+      helpNeeded: $("suggest-help").value.trim(),
+      authorId: state.uid,
+      created: new Date().toISOString(),
+      status: "pending"
+    });
+    for (const id of ["suggest-title", "suggest-body", "suggest-source", "suggest-help"]) $(id).value = "";
+    status.textContent = "Thanks. The team reviews each suggestion, and approved projects appear on the list.";
+  } catch (err) {
+    status.textContent = messageFor(err);
+  } finally {
+    $("suggest-submit").disabled = false;
+  }
+}
+
+// ---------- Data ----------
+
+async function refreshNames(ids) {
+  const unique = [...new Set(ids.filter(Boolean))].filter(id => !state.profiles[id]);
+  if (!unique.length || !state.user) return;
+  const found = await state.user.profiles(unique);
+  Object.assign(state.profiles, found);
+}
+
+function watch(collection, onDocs) {
+  state.db.collection(collection).onSnapshot(
+    snap => {
+      const docs = snap.docs.filter(d => d.exists).map(d => ({ id: d.id, ...d.data() }));
+      onDocs(docs);
+      refreshNames(docs.map(d => d.authorId)).then(route);
+      route();
+    },
+    err => setNotice(messageFor(err))
+  );
+}
+
+async function start() {
+  const claude = window.claude;
+  if (claude) {
+    state.db = await claude.use("db");
+    state.user = await claude.use("user");
+  }
+  if (state.user) {
+    state.uid = await state.user.id();
+    state.canEdit = await state.user.canEdit();
+  }
+  if (!state.db) {
+    setNotice("You're viewing the built-in projects. Sign in to comment, offer help, or suggest a project.");
+  }
+  $("comment-form").addEventListener("submit", postComment);
+  $("offer-form").addEventListener("submit", postOffer);
+  $("suggest-form").addEventListener("submit", postSuggestion);
+  window.addEventListener("hashchange", route);
+  route();
+
+  if (state.db) {
+    watch("projects", docs => {
+      state.added = {};
+      for (const d of docs) state.added[d.id] = { id: d.id, ...d };
+    });
+    watch("comments", docs => { state.comments = docs; });
+    watch("offers", docs => { state.offers = docs; });
+    watch("suggestions", docs => { state.suggestions = docs; });
+  }
+}
+
+start();
+</script>
