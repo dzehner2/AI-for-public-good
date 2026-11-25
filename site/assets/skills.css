@@ -1,0 +1,23 @@
+/* Useful Skills page */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#skill-search { width: 100%; box-sizing: border-box; margin: 6px 0 12px; }
+.disss { margin: 0 0 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.disss summary { cursor: pointer; font-weight: 600; }
+.disss dl { margin: 10px 0 0; }
+.disss dt { font-weight: 600; margin-top: 8px; }
+.disss dd { margin: 0; color: var(--muted); }
+.card .num { color: var(--muted); font-size: 0.85rem; }
+.safety-tag { display: inline-block; font-size: 0.78rem; border: 1px solid var(--focus); color: var(--focus); border-radius: 999px; padding: 1px 8px; margin-top: 6px; }
+.safety { border-left: 3px solid var(--focus); padding: 8px 12px; background: var(--surface); margin: 12px 0; }
+.course-step { margin-top: 22px; }
+.course-step h2 { margin-bottom: 6px; }
+.course-step .what { color: var(--muted); margin-bottom: 8px; }
+.course-step ol, .course-step ul { margin: 0; padding-left: 1.3em; }
+.course-step li { margin-bottom: 6px; }
+.stakes fieldset { border: 0; padding: 0; margin: 0; }
+.stakes legend { font-weight: 600; margin-bottom: 6px; }
+.stakes .check { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; }
+.stakes input[type=text], .stakes input[type=date], .stakes textarea { width: 100%; box-sizing: border-box; }
+.stakes .preview { white-space: pre-wrap; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 0.95rem; }
+.button-link { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; }
+.teach-cta { margin-top: 28px; }

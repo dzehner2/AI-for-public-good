@@ -1,0 +1,65 @@
+// Browser test for Useful Skills: list, filters, a course, stakes and the email to a friend.
+const { chromium } = require('playwright');
+const BASE = process.env.BASE || 'http://localhost:8080';
+
+(async () => {
+  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
+  const results = [];
+  const check = (name, ok, detail = '') => results.push(`${ok ? 'PASS' : 'FAIL'} ${name}${detail ? ' — ' + detail : ''}`);
+  for (const [label, viewport] of [['desktop', { width: 1200, height: 900 }], ['phone', { width: 390, height: 844 }]]) {
+    const page = await (await browser.newContext({ viewport })).newPage();
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.goto(BASE + '/skills.html', { waitUntil: 'networkidle' });
+    const cards = page.locator('#skill-cards .card');
+    check(`${label}: 100 skills listed`, (await cards.count()) === 100, String(await cards.count()));
+    await page.getByRole('button', { name: 'First aid', exact: true }).click();
+    const firstAid = await cards.count();
+    check(`${label}: First aid filter narrows the list`, firstAid > 0 && firstAid < 100, `${firstAid} skills`);
+    await page.getByRole('button', { name: 'All', exact: true }).click();
+    await page.locator('#skill-search').fill('tire');
+    check(`${label}: search finds Change a Flat Tire`, (await page.locator('#skill-cards').innerText()).includes('Change a Flat Tire'));
+    await page.locator('#skill-search').fill('');
+    check(`${label}: Teach a skill link present`, (await page.locator('a[href="teach.html"]').count()) >= 1);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(`${label}: no horizontal scroll on list`, overflow <= 0, `${overflow}px`);
+
+    await page.goto(BASE + '/skills.html#skill-perform-cpr', { waitUntil: 'networkidle' });
+    const course = page.locator('#course');
+    const text = await course.innerText();
+    check(`${label}: course shows all four DiSSS steps`, ['1. Deconstruction', '2. Selection', '3. Sequencing', '4. Stakes'].every(h => text.includes(h)));
+    check(`${label}: CPR course shows a safety note`, (await course.locator('.safety').count()) === 1);
+    const radios = course.locator('input[name="stake"]');
+    check(`${label}: stake options offered (course + generic + own)`, (await radios.count()) === 6, String(await radios.count()));
+    check(`${label}: first stake picked by default`, await radios.first().isChecked());
+    let href = await page.locator('#email-friend').getAttribute('href');
+    let body = decodeURIComponent(href.split('body=')[1] || '');
+    check(`${label}: email link is a mailto with a subject`, href.startsWith('mailto:?subject=') && decodeURIComponent(href).includes('Hold me to it'));
+    check(`${label}: email names the skill and stake`, body.includes('Perform CPR') && body.includes('Get CPR certified'));
+    check(`${label}: email links to the course`, body.includes('/skills.html#skill-perform-cpr'));
+    check(`${label}: email links to the community`, body.includes('/index.html') && body.includes('AI for Public Good'));
+    await page.locator('#friend-name').fill('Sam');
+    await page.locator('#own-stake').fill('Teach my whole family the steps.');
+    await page.locator('#stake-date').fill('2026-12-31');
+    href = await page.locator('#email-friend').getAttribute('href');
+    body = decodeURIComponent(href.split('body=')[1] || '');
+    check(`${label}: own stake, friend name and date flow into the email`, body.startsWith('Hi Sam,') && body.includes('Teach my whole family') && body.includes('December'));
+    check(`${label}: preview matches the email`, (await page.locator('#email-preview').innerText()).includes('Teach my whole family'));
+    const overflow2 = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(`${label}: no horizontal scroll on course`, overflow2 <= 0, `${overflow2}px`);
+    await page.goto(BASE + '/skills.html#skill-not-a-skill', { waitUntil: 'networkidle' });
+    check(`${label}: unknown skill shows not found`, (await page.locator('#course').innerText()).includes('Skill not found'));
+    check(`${label}: no page errors`, errors.length === 0, errors.join(' | '));
+  }
+  const page = await browser.newPage();
+  await page.goto(BASE + '/teach.html', { waitUntil: 'networkidle' });
+  const t = await page.locator('main').innerText();
+  check('teach page explains the coming interview', t.includes('proficient') && t.includes('credentials'));
+  await page.goto(BASE + '/ideas.html', { waitUntil: 'networkidle' });
+  check('project list links to Useful Skills', (await page.locator('nav a[href="skills.html"]').count()) === 1);
+  await page.goto(BASE + '/index.html', { waitUntil: 'networkidle' });
+  check('home page links to Useful Skills', (await page.locator('a[href="skills.html"]').count()) >= 1);
+  await browser.close();
+  console.log(results.join('\n'));
+  console.log(results.some(r => r.startsWith('FAIL')) ? 'SOME FAILED' : 'ALL PASSED');
+})().catch(e => { console.error(e); process.exit(1); });

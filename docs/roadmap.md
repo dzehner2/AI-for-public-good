@@ -109,3 +109,30 @@ Goal: a proposal that survives outside scrutiny.
 - Land and community cards beyond the seed set
 - Live data feeds from utilities or sensors
 - Any pilot execution
+
+## Community site roadmap
+
+Built so far (branch `community-site-build`): project list, project pages with comments and offers,
+member suggestions with admin review, private messages for offers that allow contact, a daily
+Scout agent that proposes projects for review, and Useful Skills with 100 DiSSS courses and
+stakes emailed to a friend.
+
+Next, in rough order:
+
+1. **Teacher sign-up interview.** The "Teach a skill" link on Useful Skills leads to a holding page
+   today. Replace it with a short interview: which skills the person can teach, their proficiency
+   in each (for example: practised, experienced, professional, certified instructor), any
+   credentials or certifications with issuer and date, how they'd like to teach (in person, video,
+   written), and availability. Store answers privately for admin review, with no public contact
+   details. Safety-sensitive skills (first aid, firearms, chainsaws, diving, boating, riding)
+   require a current certification before the admin can approve someone to teach them.
+2. **Donation-based knowledge base.** Turn Useful Skills into a donation-supported library:
+   readers can give what they choose, courses stay free to read, and approved teachers can add
+   lessons. Needs: a payment provider decision (one with no monthly fee), a clear statement of
+   where donations go, receipts, and an owner decision on whether teachers are paid. No money is
+   accepted on the site until this is designed and approved.
+3. **LinkedIn sign-in.** Add as a third sign-in option alongside email links and Google.
+4. **Badges.** Recognition for offers and completed skills stays private until the owner decides
+   whether badges become public.
+5. **Public launch.** Decide on Vercel login protection, set the Supabase Site URL and redirect
+   list to the production address, add a custom email sender, and merge to `main`.

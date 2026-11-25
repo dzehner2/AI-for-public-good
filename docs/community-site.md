@@ -6,12 +6,16 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 
 - `site/index.html`: the public landing page (from the mockup).
 - `site/ideas.html` and `site/assets/`: the project list, project pages, comments, offers and suggestions.
+- `site/skills.html`, `site/assets/skills-app.js` and `site/assets/skills/`: Useful Skills, 100 DiSSS courses. No sign-in or database.
+- `site/teach.html`: holding page for teacher sign-up (the interview is on the roadmap).
 - `site/assets/vendor/supabase.esm.js`: the Supabase browser library, bundled locally (supabase-js 2.45.4, MIT).
 - `scripts/build.mjs`: copies `site/` to `public/` and writes `config.js` from environment variables.
 - `supabase/migrations/`: the schema, row-level security and grants, in order.
 - `supabase/tests/rls_test.sql`: access-rule tests. Run them in the SQL editor. The script rolls back and prints PASS or FAIL lines.
 - `supabase/tests/offer_privacy_test.sql` and `supabase/tests/contact_test.sql`: anonymous offers, the hot rule, and private messages.
 - `scripts/site-smoke-test.js`: browser smoke test for the signed-out experience. It mocks the Supabase requests.
+- `scripts/check-skills.mjs` and `scripts/site-skills-test.js`: course data checks and a browser test for Useful Skills.
+- `docs/scout-agent.md`: instructions for the daily Scout agent.
 - `scripts/site-signed-in-test.js`: browser test for signed-in screens (offer contact choice and messages), with a fake session and mocked requests.
 
 ## Contact between members
@@ -56,3 +60,16 @@ on conflict do nothing;
 - Money is not an offer type. Badges are not shown. LinkedIn sign-in is not included.
 - Offers and comments reject email addresses. Phone numbers and other contact details are not checked by the database, so the owner should watch for them.
 - Only the admin can remove a built-in project, and built-in projects live in `site/assets/built-in.js`, not the database.
+
+## Useful Skills
+
+- 100 skills from the Art of Manliness list "100 Skills Every Man Should Know". The course text is
+  original and follows Tim Ferriss's DiSSS method: Deconstruction, Selection, Sequencing, Stakes.
+- 49 courses carry a safety note; first aid, firearms, chainsaws, boating and similar courses are
+  introductions that point to certified, hands-on training.
+- Picking a stake builds an email in the visitor's own email app (a `mailto:` link) with the stake,
+  the deadline, a link to the course and a link to the community home page. The site never sees
+  or stores the friend's address. There is also a Copy button for other messaging apps.
+- While the site sits behind Vercel login, links in these emails will not open for friends.
+  They will work once the site is public.
+- Donations and the teacher interview are on the roadmap (`docs/roadmap.md`), not built.
