@@ -121,8 +121,8 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub', eve, 'role', 'authenticated')::text, true);
   set local role authenticated;
   insert into public.offers (project_id, type, details) values ('seed-project', 'ideas', 'Eve offer');
-  select count(distinct author_id) into n from public.offers where project_id = 'seed-project';
-  out := out || case when n = 3 then E'PASS three distinct offerers visible to a member\n' else 'FAIL offerers visible: ' || n || E'\n' end;
+  select count(*) into n from public.hot_project_ids() h where h = 'seed-project';
+  out := out || case when n = 1 then E'PASS three distinct offerers make the project hot\n' else E'FAIL project not hot with three offerers\n' end;
   reset role;
 
   -- Signed-out visitors (anon) read projects only.

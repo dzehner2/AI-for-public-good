@@ -5,8 +5,6 @@ import { BUILT_IN } from "./built-in.js";
 
 const DOMAINS = ["All", "Water", "Air", "Energy", "Land", "Community", "Cognition"];
 const OFFER_TYPES = [["time", "Time"], ["expertise", "Expertise"], ["resources", "Resources"], ["ideas", "Ideas"], ["network", "Network"]];
-const HOT_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
-const HOT_MIN_PEOPLE = 3;
 const SCRATCH_ID = "scratchpad";
 const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 
@@ -22,6 +20,7 @@ const state = {
   comments: [],
   offers: [],
   suggestions: [],    // the signed-in person's own suggestions, plus all of them for the admin
+  hot: new Set(),     // project ids with offers from 3+ people in 30 days (computed in the database)
   filter: "All",
   editing: null       // { table, id } for the one entry being edited inline
 };
@@ -75,14 +74,9 @@ function allProjects() {
   return byId;
 }
 
-function isHot(projectId, now) {
-  const people = new Set();
-  for (const offer of state.offers) {
-    if (offer.project_id !== projectId) continue;
-    const when = Date.parse(offer.created_at);
-    if (!isNaN(when) && now - when <= HOT_WINDOW_MS) people.add(offer.author_id);
-  }
-  return people.size >= HOT_MIN_PEOPLE;
+// The database counts distinct people, including anonymous offers whose authors the browser never sees.
+function isHot(projectId) {
+  return state.hot.has(projectId);
 }
 
 function byDate(a, b, key = "created_at") {
@@ -103,18 +97,19 @@ async function loadAll() {
   state.projects = projectsRes.data.map(p => ({ ...p, sources: p.sources || [], channels: p.channels || [] }));
 
   if (!state.user) {
-    state.comments = []; state.offers = []; state.suggestions = []; state.profiles = {}; state.isAdmin = false;
+    state.comments = []; state.offers = []; state.suggestions = []; state.profiles = {}; state.isAdmin = false; state.hot = new Set();
     return;
   }
 
-  const [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes] = await Promise.all([
+  const [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes] = await Promise.all([
     sb.from("profiles").select("id, name"),
     sb.from("admins").select("user_id").eq("user_id", state.user.id),
     sb.from("comments").select("id, project_id, author_id, body, created_at").order("created_at", { ascending: true }),
-    sb.from("offers").select("id, project_id, author_id, type, details, available, anonymous, created_at").order("created_at", { ascending: true }),
-    sb.from("suggestions").select("id, author_id, title, domain, body, source_url, help_needed, status, project_id, created_at").order("created_at", { ascending: true })
+    sb.rpc("list_offers"),
+    sb.from("suggestions").select("id, author_id, title, domain, body, source_url, help_needed, status, project_id, created_at").order("created_at", { ascending: true }),
+    sb.rpc("hot_project_ids")
   ]);
-  const failed = [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes].find(r => r.error);
+  const failed = [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes].find(r => r.error);
   if (failed) return setNotice(messageFor(failed.error));
 
   state.profiles = {};
@@ -123,6 +118,7 @@ async function loadAll() {
   state.comments = commentsRes.data;
   state.offers = offersRes.data;
   state.suggestions = suggestionsRes.data;
+  state.hot = new Set((hotRes.data || []).map(row => (typeof row === "string" ? row : row.hot_project_ids)));
 }
 
 // ---------- Views ----------
@@ -193,7 +189,6 @@ function renderList() {
   renderChips();
   const cards = $("cards");
   cards.replaceChildren();
-  const now = Date.now();
   const projects = Object.values(allProjects()).filter(matchesFilter);
   if (!projects.length) cards.append(el("p", { class: "empty", text: "No projects in this area yet. Suggest one." }));
   for (const project of projects) {
@@ -203,7 +198,7 @@ function renderList() {
       el("span", { text: `${comments} comment${comments === 1 ? "" : "s"}` }),
       el("span", { text: `${offers} offer${offers === 1 ? "" : "s"}` })
     ];
-    if (state.user && isHot(project.id, now)) meta.unshift(el("span", { class: "hot", text: "Hot: several people are offering help" }));
+    if (state.user && isHot(project.id)) meta.unshift(el("span", { class: "hot", text: "Hot: several people are offering help" }));
     const body = project.body || "";
     cards.append(el("a", { class: "card", href: "#project-" + project.id }, [
       el("p", { class: "domain", text: project.domain }),
@@ -235,7 +230,7 @@ function renderProjectHead(project) {
     });
     head.append(line);
   }
-  if (state.user && isHot(project.id, Date.now())) {
+  if (state.user && isHot(project.id)) {
     head.append(el("p", { class: "hot", text: "Hot: several people have offered help in the last 30 days." }));
   }
   if (state.isAdmin && state.projects.some(p => p.id === project.id)) {
@@ -253,7 +248,8 @@ function renderProjectHead(project) {
 
 // Shared buttons for an entry's author and for the admin.
 function entryActions(row, { onEdit, table }) {
-  const mine = state.user && row.author_id === state.user.id;
+  // Offers come with is_mine, because anonymous offers hide author_id from everyone but the author.
+  const mine = !!state.user && (typeof row.is_mine === "boolean" ? row.is_mine : row.author_id === state.user.id);
   const nodes = [];
   if (mine && onEdit) nodes.push(el("button", { type: "button", class: "secondary", text: "Edit", on: { click: () => { state.editing = { table, id: row.id }; render(); } } }));
   if (mine || state.isAdmin) {
