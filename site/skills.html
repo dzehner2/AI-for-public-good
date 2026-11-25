@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Useful Skills</title>
+<meta name="description" content="Free short courses for 150 practical skills, built on Tim Ferriss's DiSSS method. Pick a skill, set a stake, and tell a friend.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/ideas.css">
+<link rel="stylesheet" href="assets/ideas-extra.css">
+<link rel="stylesheet" href="assets/skills.css">
+<link rel="stylesheet" href="assets/profile.css">
+<script src="config.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Useful Skills</h1>
+    <p class="lede">Short courses for 150 practical skills that help on community projects and in everyday life. Each course follows Tim Ferriss's DiSSS method: break the skill down, pick the parts that matter most, learn them in order, and set a stake so you follow through.</p>
+    <nav aria-label="Pages">
+      <a href="index.html">Home</a>
+      <a href="ideas.html">Community projects</a>
+      <a href="#">All skills</a>
+      <a href="profile.html">My profile</a>
+      <a href="teach.html">Teach a skill</a>
+    </nav>
+    <p class="note">Skills 1 to 100 come from the Art of Manliness list of 100 skills. Skills 101 to 150 round out the set from established programs, including the American Red Cross, FoodSafety.gov, the National Center for Home Food Preservation, the Consumer Financial Protection Bureau, 4-H, Scouts and Girl Scouts badges, and the national Family and Consumer Sciences standards. Each of those courses names its source. All course text is our own. Courses marked with a safety note are introductions only: learn those hands-on from a certified instructor.</p>
+  </header>
+
+  <section id="view-skills" aria-label="Skills">
+    <details class="disss">
+      <summary>How the DiSSS method works</summary>
+      <dl>
+        <dt>Deconstruction</dt><dd>Break the skill into its smallest parts.</dd>
+        <dt>Selection</dt><dd>Find the few parts that give you most of the result.</dd>
+        <dt>Sequencing</dt><dd>Learn those parts in the right order.</dd>
+        <dt>Stakes</dt><dd>Set a real consequence, and tell a friend, so you actually finish.</dd>
+      </dl>
+    </details>
+    <label for="skill-search" class="visually-hidden">Search skills</label>
+    <input id="skill-search" type="search" placeholder="Search skills, for example: tire, speech, fire" autocomplete="off">
+    <div class="chips" id="skill-chips" role="group" aria-label="Filter by category"></div>
+    <p class="status" id="skill-count" aria-live="polite"></p>
+    <div class="grid" id="skill-cards"></div>
+    <div class="panel teach-cta">
+      <h2>Can you teach one of these?</h2>
+      <p>We're looking for people who can teach a skill to others in the community.</p>
+      <p><a class="button-link" href="teach.html">Sign up to teach a skill</a></p>
+    </div>
+  </section>
+
+  <section id="view-course" hidden>
+    <a class="back" href="#">Back to all skills</a>
+    <article id="course"></article>
+  </section>
+</main>
+<script type="module" src="assets/skills-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+/* Additions for sign-in, inline editing and the admin's remove controls. */
+.auth-panel { margin-top: 18px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.auth-panel .note { margin-bottom: 10px; }
+.auth-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.auth-row input { flex: 1 1 220px; min-width: 0; }
+.auth-row button { flex: 0 0 auto; }
+.danger { background: transparent; color: var(--focus); border: 1px solid var(--focus); border-radius: 6px; padding: 6px 12px; font: inherit; cursor: pointer; }
+.entry-actions { margin-top: 8px; }
+.editor label { display: block; margin-top: 10px; }
+.editor input, .editor textarea { width: 100%; box-sizing: border-box; }
+#my-suggestions { margin-top: 28px; }
+#my-suggestions h3 { margin-bottom: 8px; }
+
+[hidden] { display: none !important; }
+/* Messages about offers */
+.thread .message { border-left: 3px solid var(--line); padding: 4px 0 4px 12px; margin: 10px 0; }
+.thread .message.mine { border-left-color: var(--accent); }
+.thread textarea { width: 100%; box-sizing: border-box; margin-top: 10px; }

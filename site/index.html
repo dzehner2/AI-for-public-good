@@ -1,0 +1,189 @@
+<title>AI for Public Good</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<style>
+/* Layout: one calm column. The hero states the idea, then the ways to help, then the ideas, then the contact. */
+:root {
+  --bg: #eef2ee;
+  --surface: #f9fbf9;
+  --ink: #15211c;
+  --muted: #4f5f58;
+  --accent: #1f5f4a;
+  --accent-ink: #f9fbf9;
+  --line: #cfd9d3;
+  --focus: #b5552b;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101815;
+    --surface: #17221e;
+    --ink: #e6eee9;
+    --muted: #a3b3ab;
+    --accent: #8fd1b6;
+    --accent-ink: #0f1b16;
+    --line: #2b3a34;
+    --focus: #e39a6b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101815;
+  --surface: #17221e;
+  --ink: #e6eee9;
+  --muted: #a3b3ab;
+  --accent: #8fd1b6;
+  --accent-ink: #0f1b16;
+  --line: #2b3a34;
+  --focus: #e39a6b;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Public Sans", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 56px;
+}
+main { max-width: 680px; margin: 0 auto; min-width: 0; }
+section { padding-block: 40px; border-top: 1px solid var(--line); }
+h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.3rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.7rem; margin-bottom: 14px; }
+h3 { font-size: 1.2rem; margin-bottom: 4px; }
+p { margin: 0 0 14px; text-wrap: pretty; }
+a { color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.eyebrow { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 14px; }
+.hero { padding-block: 64px 40px; }
+.hero p.lede { font-size: 1.15rem; color: var(--muted); max-width: 36em; }
+.status { font-size: 0.92rem; color: var(--muted); border-left: 3px solid var(--accent); padding-left: 12px; margin-top: 24px; }
+.ways { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin-top: 20px; }
+.way { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+.way p { font-size: 0.95rem; color: var(--muted); margin: 0; }
+.idea { padding-block: 16px; border-bottom: 1px solid var(--line); min-width: 0; }
+.idea:last-child { border-bottom: 0; }
+.idea .tag { font-size: 0.8rem; color: var(--muted); }
+.idea p { margin-bottom: 0; }
+.steps { padding-left: 0; list-style: none; counter-reset: step; margin: 16px 0 0; }
+.steps li { padding-left: 40px; position: relative; margin-bottom: 14px; min-width: 0; }
+.steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-size: 0.9rem; font-weight: 600; }
+.not-yet { background: var(--surface); border-radius: 8px; padding: 18px 20px; }
+.not-yet ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); }
+.contact { background: var(--accent); color: var(--accent-ink); border-radius: 8px; padding: 22px 22px; }
+.contact p { margin-bottom: 12px; }
+.contact .address { font-family: "Newsreader", Georgia, serif; font-size: 1.35rem; overflow-wrap: anywhere; user-select: all; }
+.contact button {
+  font: inherit; font-weight: 600; background: var(--accent-ink); color: var(--accent);
+  border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer;
+}
+.contact a { color: var(--accent-ink); }
+.copy-status { font-size: 0.9rem; min-height: 1.2em; margin: 8px 0 0; }
+footer { padding-top: 28px; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<main>
+  <header class="hero">
+    <p class="eyebrow">A community in early form</p>
+    <h1>AI for Public Good</h1>
+    <p class="lede">AI uses electricity, water, and land, and it is changing how we think and talk with each other. This is a place for people who want to do something about both: to offer time, skill, money, or introductions to projects that help communities, and to have that help noticed and returned.</p>
+    <p class="status">We're early. We are still choosing how the community is run and funded, and nothing here is promised yet. If you want to shape it, tell us what you could offer.</p>
+  </header>
+
+  <section aria-labelledby="ways">
+    <h2 id="ways">Ways to help</h2>
+    <p>You don't have to be an expert. Pick what you can give.</p>
+    <div class="ways">
+      <div class="way"><h3>Time</h3><p>Reviewing a draft, attending a hearing, a few calls each month.</p></div>
+      <div class="way"><h3>Expertise</h3><p>Water or energy engineering, data, law, design, writing, translation, field work.</p></div>
+      <div class="way"><h3>Resources</h3><p>Meeting space, equipment such as a sensor, software access, a dataset you can share.</p></div>
+      <div class="way"><h3>Ideas</h3><p>A project, a question, or a source we haven't covered.</p></div>
+      <div class="way"><h3>Network</h3><p>An introduction to a utility, council, researcher, funder, or community group.</p></div>
+      <div class="way"><h3>Money</h3><p>A gift to a named project. Money isn't accepted yet, while the structure is being set up.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="ideas">
+    <h2 id="ideas">Ideas already on the table</h2>
+    <p><a href="ideas.html">Open the project list to comment, offer help, or suggest one.</a></p>
+    <p><a href="skills.html">Learn a useful skill: 150 short courses, each with a stake you share with a friend.</a></p>
+    <p>Each idea links to the public work it comes from. Some are early, and none has been tested yet.</p>
+    <article class="idea">
+      <h3>Find leaks in city water pipes with AI</h3>
+      <p class="tag">Water · seed</p>
+      <p>Water lost through leaking pipes is treated water that never reaches a customer. Sensor and meter data could rank the likely leaks for crews to check.</p>
+    </article>
+    <article class="idea">
+      <h3>Cool data centers with reclaimed water, not drinking water</h3>
+      <p class="tag">Water · seed</p>
+      <p>Facilities can use treated wastewater for cooling instead of water people drink, and publish how much they use.</p>
+    </article>
+    <article class="idea">
+      <h3>Community-run air sensors with open, checked data</h3>
+      <p class="tag">Air · seed</p>
+      <p>Neighborhoods with few air monitors could host their own sensors, calibrated against nearby official ones.</p>
+    </article>
+  </section>
+
+  <section aria-labelledby="how">
+    <h2 id="how">How it works</h2>
+    <ol class="steps">
+      <li><strong>Offer.</strong> Choose a project or the community as a whole, and say what you can give. Your name is credited the way you choose.</li>
+      <li><strong>We connect you.</strong> Someone reaches out to talk about what would help and what you'd like in return. Contact details are shared only if you agree.</li>
+      <li><strong>Help is confirmed.</strong> The project lead confirms when help is given, and it's recorded. Projects with offers from several people are marked as needing hands.</li>
+    </ol>
+    <p>There are no leaderboards. Recognition is for help that was actually given, and nobody is ranked against anyone else.</p>
+  </section>
+
+  <section aria-labelledby="not-yet-title">
+    <h2 id="not-yet-title">What we are not doing yet</h2>
+    <div class="not-yet">
+      <ul>
+        <li>Accepting money. The structure has to be set up first, and the first gifts will come with a public report on what they did.</li>
+        <li>Publishing badges. Recognition is kept private for now.</li>
+        <li>Claiming results. The ideas listed here are proposals, and their figures come from public summaries we are still checking.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="contact-title">
+    <h2 id="contact-title">Get in touch</h2>
+    <div class="contact">
+      <p>Tell us what you could offer, or what you'd like to work on. A person reads every message.</p>
+      <p class="address" id="address">themechwhisperer@gmail.com</p>
+      <button type="button" id="copy">Copy address</button>
+      <p class="copy-status" id="copy-status" aria-live="polite"></p>
+      <p><a href="mailto:themechwhisperer@gmail.com">Open in your email app</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Public resources, including the idea library, scoring rules, and the code that builds them, are at <a href="https://github.com/dzehner2/AI-for-public-good" target="_blank" rel="noopener noreferrer">github.com/dzehner2/AI-for-public-good</a>.</p>
+  </footer>
+</main>
+
+<script>
+const copyButton = document.getElementById("copy");
+const copyStatus = document.getElementById("copy-status");
+const address = document.getElementById("address");
+
+copyButton.addEventListener("click", async () => {
+  const text = address.textContent.trim();
+  try {
+    await navigator.clipboard.writeText(text);
+    copyStatus.textContent = "Copied.";
+  } catch (err) {
+    // Some app views refuse clipboard access. Select the address so the viewer can copy it.
+    const range = document.createRange();
+    range.selectNodeContents(address);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    copyStatus.textContent = "Press Ctrl+C or Cmd+C to copy the selected address.";
+  }
+});
+</script>

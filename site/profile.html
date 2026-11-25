@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Skills Profile</title>
+<meta name="description" content="Rate your proficiency in 150 useful skills and level up by completing courses. Private to you.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/ideas.css">
+<link rel="stylesheet" href="assets/ideas-extra.css">
+<link rel="stylesheet" href="assets/skills.css">
+<link rel="stylesheet" href="assets/profile.css">
+<script src="config.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>My skills profile</h1>
+    <p class="lede">Rate how well you know each skill, and level up by completing courses.</p>
+    <nav aria-label="Pages">
+      <a href="index.html">Home</a>
+      <a href="skills.html">Useful Skills</a>
+      <a href="ideas.html">Community projects</a>
+      <a href="teach.html">Teach a skill</a>
+    </nav>
+    <p class="note">Your profile is private. Only you can see your ratings, progress and level.</p>
+    <div id="notice" class="notice" hidden></div>
+  </header>
+
+  <section id="signed-out" class="panel" hidden>
+    <h2>Sign in to see your profile</h2>
+    <p>Sign in with an email link or Google. The courses stay open to everyone; signing in lets you track progress.</p>
+    <div class="auth-row">
+      <input id="auth-email" type="email" autocomplete="email" placeholder="you@example.org" maxlength="200" aria-label="Email address">
+      <button type="button" class="primary" id="send-link">Email me a sign-in link</button>
+    </div>
+    <div class="auth-row"><button type="button" class="secondary" id="google">Continue with Google</button></div>
+    <p class="status" id="auth-status" aria-live="polite"></p>
+  </section>
+
+  <section id="signed-in" hidden>
+    <div class="panel level-card">
+      <p class="domain" id="who"></p>
+      <h2 id="level-title"></h2>
+      <div class="meter" role="progressbar" aria-label="Progress to next level" aria-valuemin="0" id="level-meter"><span id="level-fill"></span></div>
+      <p class="status" id="level-next"></p>
+      <dl class="stats">
+        <div><dt>Courses completed</dt><dd id="stat-completed">0</dd></div>
+        <div><dt>In progress</dt><dd id="stat-progress">0</dd></div>
+        <div><dt>Skills rated</dt><dd id="stat-rated">0</dd></div>
+        <div><dt>Can teach</dt><dd id="stat-teach">0</dd></div>
+      </dl>
+      <p class="note" id="teach-hint" hidden>You rated yourself "Can teach" on some skills. <a href="teach.html">Sign up to teach</a> when teacher sign-up opens.</p>
+      <p><button type="button" class="secondary" id="sign-out">Sign out</button></p>
+    </div>
+
+    <section class="panel" id="interview" aria-labelledby="interview-title">
+      <h2 id="interview-title">About you</h2>
+      <div id="interview-body"></div>
+    </section>
+
+    <section id="next-up" aria-labelledby="next-title">
+      <h2 id="next-title">What to learn next</h2>
+      <div id="recommendations" class="recs"></div>
+    </section>
+
+    <section id="tree-section" aria-labelledby="tree-title">
+      <h2 id="tree-title">Your skill tree</h2>
+      <p class="note">Each branch levels up as you complete its courses. A skill unlocks once you complete, or rate yourself Practising in, the skills before it. Every course stays open to read.</p>
+      <ul class="tree-legend" aria-label="Legend">
+        <li><span class="node-dot done"></span>Completed</li>
+        <li><span class="node-dot progress"></span>In progress</li>
+        <li><span class="node-dot available"></span>Ready to learn</li>
+        <li><span class="node-dot locked"></span>Locked</li>
+      </ul>
+      <div id="skill-tree" class="skill-tree"></div>
+    </section>
+
+    <h2 class="all-skills-title">All skills</h2>
+    <details class="disss">
+      <summary>How levels work</summary>
+      <ul>
+        <li>Rate each skill from "Not yet" to "Can teach". Change it whenever you like.</li>
+        <li>On a course page, tick the learning steps as you do them. When every step is ticked, mark the course complete.</li>
+        <li>Completing a course raises that skill one level, up to "Confident". "Can teach" is your own call.</li>
+        <li>Your overall level goes up every three completed courses.</li>
+      </ul>
+    </details>
+
+    <label for="profile-search" class="visually-hidden">Search skills</label>
+    <input id="profile-search" type="search" placeholder="Search your skills" autocomplete="off">
+    <div class="chips" id="profile-filters" role="group" aria-label="Show"></div>
+    <p class="status" id="profile-count" aria-live="polite"></p>
+    <div id="profile-list" class="profile-list"></div>
+  </section>
+</main>
+<script type="module" src="assets/profile-app.js"></script>
+</body>
+</html>
