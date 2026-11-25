@@ -7,6 +7,7 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 - `site/index.html`: the public landing page (from the mockup).
 - `site/ideas.html` and `site/assets/`: the project list, project pages, comments, offers and suggestions.
 - `site/skills.html`, `site/assets/skills-app.js` and `site/assets/skills/`: Useful Skills, 100 DiSSS courses. No sign-in or database.
+- `site/profile.html`, `site/assets/profile-app.js` and `site/assets/progress.js`: the private skills profile and course progress.
 - `site/teach.html`: holding page for teacher sign-up (the interview is on the roadmap).
 - `site/assets/vendor/supabase.esm.js`: the Supabase browser library, bundled locally (supabase-js 2.45.4, MIT).
 - `scripts/build.mjs`: copies `site/` to `public/` and writes `config.js` from environment variables.
@@ -14,6 +15,7 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 - `supabase/tests/rls_test.sql`: access-rule tests. Run them in the SQL editor. The script rolls back and prints PASS or FAIL lines.
 - `supabase/tests/offer_privacy_test.sql` and `supabase/tests/contact_test.sql`: anonymous offers, the hot rule, and private messages.
 - `scripts/site-smoke-test.js`: browser smoke test for the signed-out experience. It mocks the Supabase requests.
+- `supabase/tests/skill_progress_test.sql` and `scripts/site-profile-test.js`: profile privacy and the profile and course-progress screens.
 - `scripts/check-skills.mjs` and `scripts/site-skills-test.js`: course data checks and a browser test for Useful Skills.
 - `docs/scout-agent.md`: instructions for the daily Scout agent.
 - `scripts/site-signed-in-test.js`: browser test for signed-in screens (offer contact choice and messages), with a fake session and mocked requests.
@@ -82,3 +84,17 @@ on conflict do nothing;
   "More videos on YouTube" search link. Break Down a Door has no picked video on purpose.
   Picks live in `site/assets/skills/videos.js`; videos can disappear, so re-check them now and then.
 - Donations and the teacher interview are on the roadmap (`docs/roadmap.md`), not built.
+
+## Skills profile
+
+- `profile.html` needs sign-in. Each person rates every skill: Not yet, Beginner, Practising,
+  Confident, or Can teach, and sees their course progress and an overall level.
+- On a course page, signed-in people tick each learning step, set their level, and mark the course
+  complete once every step is ticked. Completing a course raises that skill one level, up to
+  Confident; "Can teach" is the person's own rating and never changes on completion.
+- The overall level goes up every three completed courses (Level 1 Newcomer, 2 Apprentice, 3 Handy,
+  4 Capable, 5 Skilled, 6 Seasoned, 7 Expert, 8 Master).
+- Profiles are private: the `skill_progress` table only lets each person read and change their own
+  rows. Nothing is shown to other members or the admin. Making levels or badges public is an owner
+  decision on the roadmap.
+- Signed-out visitors can still read every course; they see a link to sign in to track progress.

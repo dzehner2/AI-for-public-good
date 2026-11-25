@@ -2,11 +2,16 @@
 // No sign-in and no server: the email opens in the visitor's own email app, and nothing is stored.
 import { SKILLS, CATEGORIES, GENERIC_STAKES } from "./skills/index.js";
 import { VIDEOS } from "./skills/videos.js";
+import { LEVELS, levelAfterCompletion, overallLevel, getClient, onUser, loadProgress, saveProgress } from "./progress.js";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const $ = id => document.getElementById(id);
-const state = { filter: "All", query: "" };
+const state = { filter: "All", query: "", sb: null, user: null, progress: new Map() };
+
+function rowFor(id) {
+  return state.progress.get(id) || { skill_id: id, level: 0, steps_done: [], completed_at: null };
+}
 
 function el(tag, attrs, children) {
   const node = document.createElement(tag);
@@ -64,6 +69,7 @@ function renderList() {
       el("h3", {}, [el("span", { class: "num", text: skill.n + ". " }), skill.name]),
       el("p", { class: "summary", text: "Time to learn: " + skill.time }),
       skill.safety ? el("span", { class: "safety-tag", text: "Safety note: learn hands-on" }) : null,
+      cardStatus(skill),
       el("span", { class: "more", text: "Open the course" })
     ]));
   }
@@ -147,6 +153,104 @@ function videosSection(skill) {
     el("p", {}, [el("a", { href: search, target: "_blank", rel: "noopener noreferrer", text: "More videos on YouTube" })]),
     skill.safety ? el("p", { class: "note", text: "Videos are no substitute for hands-on training from a certified instructor." }) : null
   ]);
+}
+
+// ---------- Progress (signed-in only, private) ----------
+
+function cardStatus(skill) {
+  if (!state.user) return null;
+  const row = state.progress.get(skill.id);
+  if (!row) return null;
+  if (row.completed_at) return el("p", { class: "done", text: "Completed · " + LEVELS[row.level] });
+  if (row.steps_done.length) return el("p", { class: "summary", text: `${row.steps_done.length} of ${skill.q.length} steps done` });
+  if (row.level) return el("p", { class: "summary", text: "Your level: " + LEVELS[row.level] });
+  return null;
+}
+
+async function persist(skill, row, statusEl) {
+  try {
+    await saveProgress(state.sb, state.user.id, skill.id, row);
+    state.progress.set(skill.id, row);
+    return true;
+  } catch {
+    if (statusEl) statusEl.textContent = "Couldn't save your progress. Try again.";
+    return false;
+  }
+}
+
+// Sequencing with a tick box per step when signed in.
+function sequencingStep(skill) {
+  if (!state.user) return step("3. Sequencing", "Learn in this order.", skill.q, true);
+  const row = rowFor(skill.id);
+  const list = el("ol", { class: "step-list" });
+  skill.q.forEach((text, i) => {
+    const n = i + 1;
+    const box = el("input", { type: "checkbox", id: `step-${n}`, checked: row.steps_done.includes(n),
+      on: { change: async e => {
+        const current = rowFor(skill.id);
+        const done = new Set(current.steps_done);
+        if (e.target.checked) done.add(n); else done.delete(n);
+        const next = { ...current, steps_done: [...done].sort((a, b) => a - b) };
+        if (await persist(skill, next, $("progress-status"))) updateProgressBox(skill);
+        else e.target.checked = !e.target.checked;
+      } } });
+    list.append(el("li", {}, [el("label", { class: "step-check", for: `step-${n}` }, [box, el("span", { text })])]));
+  });
+  return el("section", { class: "course-step" }, [
+    el("h2", { text: "3. Sequencing" }),
+    el("p", { class: "what", text: "Learn in this order. Tick each step when you've done it." }),
+    list
+  ]);
+}
+
+function progressBox(skill) {
+  if (!state.sb) return null;
+  if (!state.user) {
+    return el("div", { class: "progress-box" }, [
+      el("p", {}, ["Want to track your progress and level up? ", el("a", { href: "profile.html", text: "Sign in on your profile" }), "."])
+    ]);
+  }
+  const row = rowFor(skill.id);
+  const select = el("select", { id: "course-level", "aria-label": "Your level in " + skill.name,
+    on: { change: async e => {
+      const next = { ...rowFor(skill.id), level: Number(e.target.value) };
+      if (await persist(skill, next, $("progress-status"))) { $("progress-status").textContent = "Saved."; }
+    } } }, LEVELS.map((label, i) => el("option", { value: String(i), text: label, selected: row.level === i })));
+  const complete = el("button", { type: "button", class: "primary", id: "complete-course", text: "Mark course complete",
+    on: { click: async () => {
+      const current = rowFor(skill.id);
+      const next = { ...current, completed_at: new Date().toISOString(), level: levelAfterCompletion(current.level) };
+      if (!(await persist(skill, next, $("progress-status")))) return;
+      const completed = [...state.progress.values()].filter(r => r.completed_at).length;
+      const lvl = overallLevel(completed);
+      $("progress-status").textContent = `Course complete. ${skill.name} is now "${LEVELS[next.level]}". You're Level ${lvl.level}: ${lvl.title}.`;
+      updateProgressBox(skill);
+    } } });
+  return el("div", { class: "progress-box", id: "progress-box" }, [
+    el("h3", { text: "Your progress" }),
+    el("p", { id: "progress-summary", class: "status" }),
+    el("label", { for: "course-level", text: "Your level in this skill" }), select,
+    el("div", { class: "actions" }, [complete, el("a", { href: "profile.html", text: "Open my profile" })]),
+    el("p", { class: "status", id: "progress-status", "aria-live": "polite" }),
+    el("p", { class: "note", text: "Only you can see your progress." })
+  ]);
+}
+
+function updateProgressBox(skill) {
+  const summary = $("progress-summary");
+  if (!summary) return;
+  const row = rowFor(skill.id);
+  const all = row.steps_done.length >= skill.q.length;
+  const button = $("complete-course");
+  if (row.completed_at) {
+    summary.replaceChildren(el("span", { class: "completed-badge", text: "Completed" }), " on " + new Date(row.completed_at).toLocaleDateString());
+    button.disabled = true;
+  } else {
+    summary.textContent = `${row.steps_done.length} of ${skill.q.length} steps done.` + (all ? " Ready to mark complete." : " Tick every step to complete the course.");
+    button.disabled = !all;
+  }
+  const select = $("course-level");
+  if (select) select.value = String(row.level);
 }
 
 // ---------- Course ----------
@@ -263,11 +367,13 @@ function renderCourse(id) {
     step("1. Deconstruction", "The parts this skill is made of.", skill.d, false),
     partsDiagram(skill),
     step("2. Selection", "The few parts that matter most. Get these right first.", skill.s, false),
-    step("3. Sequencing", "Learn in this order.", skill.q, true),
+    sequencingStep(skill),
+    progressBox(skill),
     learningPathDiagram(skill),
     videosSection(skill),
     renderStakes(skill)
   );
+  updateProgressBox(skill);
 }
 
 // ---------- Routing ----------
@@ -290,3 +396,15 @@ function route() {
 $("skill-search").addEventListener("input", event => { state.query = event.target.value.trim(); renderList(); });
 window.addEventListener("hashchange", route);
 route();
+
+state.sb = getClient();
+if (state.sb) {
+  onUser(state.sb, async user => {
+    state.user = user;
+    state.progress = new Map();
+    if (user) {
+      try { state.progress = await loadProgress(state.sb); } catch { /* the course still works without progress */ }
+    }
+    route();
+  });
+}

@@ -132,7 +132,8 @@ Next, in rough order:
    where donations go, receipts, and an owner decision on whether teachers are paid. No money is
    accepted on the site until this is designed and approved.
 3. **LinkedIn sign-in.** Add as a third sign-in option alongside email links and Google.
-4. **Badges.** Recognition for offers and completed skills stays private until the owner decides
-   whether badges become public.
+4. **Badges and public levels.** Skill levels and completed courses live on each person's private
+   profile. Recognition for offers and completed skills stays private until the owner decides
+   whether badges or levels become public, for example on teacher profiles.
 5. **Public launch.** Decide on Vercel login protection, set the Supabase Site URL and redirect
    list to the production address, add a custom email sender, and merge to `main`.
