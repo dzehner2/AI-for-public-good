@@ -10,7 +10,20 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 - `scripts/build.mjs`: copies `site/` to `public/` and writes `config.js` from environment variables.
 - `supabase/migrations/`: the schema, row-level security and grants, in order.
 - `supabase/tests/rls_test.sql`: access-rule tests. Run them in the SQL editor. The script rolls back and prints PASS or FAIL lines.
+- `supabase/tests/offer_privacy_test.sql` and `supabase/tests/contact_test.sql`: anonymous offers, the hot rule, and private messages.
 - `scripts/site-smoke-test.js`: browser smoke test for the signed-out experience. It mocks the Supabase requests.
+- `scripts/site-signed-in-test.js`: browser test for signed-in screens (offer contact choice and messages), with a fake session and mocked requests.
+
+## Contact between members
+
+When someone offers help, they choose whether other members may contact them about it. The choice is off by default and can be changed later by editing the offer.
+
+- If it is on, other signed-in members see a Send a message button on the offer. Messages are private to the two people in the conversation and appear under Messages.
+- The person who made the offer can reply. If they turn contact off later, nobody can start or continue a conversation with them about that offer, but they can still reply.
+- The site never stores email addresses or phone numbers for contact: offers and messages reject email addresses. People decide for themselves what to share in a message.
+- An anonymous offer stays anonymous: the person writing to it sees "Someone". Replying shows the replier's name.
+- Each person can send at most 20 messages an hour.
+- People can delete their own messages. Deleting an offer deletes its conversations. The admin can delete a reported message, but no screen shows the admin other people's messages.
 
 ## Vercel settings
 

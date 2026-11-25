@@ -20,7 +20,9 @@ const state = {
   comments: [],
   offers: [],
   suggestions: [],    // the signed-in person's own suggestions, plus all of them for the admin
-  hot: new Set(),     // project ids with offers from 3+ people in 30 days (computed in the database)
+  hot: new Set(),
+  messages: [],       // conversations about offers that the signed-in person is part of
+  composing: null,    // offer id whose "send a message" box is open     // project ids with offers from 3+ people in 30 days (computed in the database)
   filter: "All",
   editing: null       // { table, id } for the one entry being edited inline
 };
@@ -54,6 +56,7 @@ function messageFor(err) {
   if (code === "23514") return "Check your text: it may be too long, or it contains an email address. Offers and comments must not include contact details.";
   if (code === "22023" || code === "P0002") return "That suggestion has already been reviewed or no longer exists.";
   if (code === "PGRST301" || code === "401") return "Your sign-in has expired. Sign in again.";
+  if (code === "54000") return "You've sent a lot of messages in the last hour. Try again later.";
   return "Could not save. Try again.";
 }
 
@@ -97,19 +100,20 @@ async function loadAll() {
   state.projects = projectsRes.data.map(p => ({ ...p, sources: p.sources || [], channels: p.channels || [] }));
 
   if (!state.user) {
-    state.comments = []; state.offers = []; state.suggestions = []; state.profiles = {}; state.isAdmin = false; state.hot = new Set();
+    state.comments = []; state.offers = []; state.suggestions = []; state.profiles = {}; state.isAdmin = false; state.hot = new Set(); state.messages = [];
     return;
   }
 
-  const [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes] = await Promise.all([
+  const [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes, messagesRes] = await Promise.all([
     sb.from("profiles").select("id, name"),
     sb.from("admins").select("user_id").eq("user_id", state.user.id),
     sb.from("comments").select("id, project_id, author_id, body, created_at").order("created_at", { ascending: true }),
     sb.rpc("list_offers"),
     sb.from("suggestions").select("id, author_id, title, domain, body, source_url, help_needed, status, project_id, created_at").order("created_at", { ascending: true }),
-    sb.rpc("hot_project_ids")
+    sb.rpc("hot_project_ids"),
+    sb.rpc("list_messages")
   ]);
-  const failed = [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes].find(r => r.error);
+  const failed = [profilesRes, adminRes, commentsRes, offersRes, suggestionsRes, hotRes, messagesRes].find(r => r.error);
   if (failed) return setNotice(messageFor(failed.error));
 
   state.profiles = {};
@@ -119,12 +123,13 @@ async function loadAll() {
   state.offers = offersRes.data;
   state.suggestions = suggestionsRes.data;
   state.hot = new Set((hotRes.data || []).map(row => (typeof row === "string" ? row : row.hot_project_ids)));
+  state.messages = messagesRes.data || [];
 }
 
 // ---------- Views ----------
 
 function showView(name) {
-  for (const view of ["list", "project", "suggest", "review"]) {
+  for (const view of ["list", "project", "suggest", "review", "messages"]) {
     $("view-" + view).hidden = view !== name;
   }
 }
@@ -269,12 +274,17 @@ function editor(row, table, fields, onSave) {
   const status = el("p", { class: "status", "aria-live": "polite" });
   const nodes = [];
   for (const f of fields) {
+    if (f.checkbox) {
+      inputs[f.key] = el("input", { type: "checkbox", id: `edit-${f.key}`, checked: !!row[f.key] });
+      nodes.push(el("label", { class: "check", for: `edit-${f.key}` }, [inputs[f.key], " " + f.label]));
+      continue;
+    }
     inputs[f.key] = f.multiline
       ? el("textarea", { maxlength: String(f.max), id: `edit-${f.key}`, "aria-label": f.label }, [row[f.key] || ""])
       : el("input", { maxlength: String(f.max), id: `edit-${f.key}`, value: row[f.key] || "", "aria-label": f.label });
     nodes.push(el("label", { for: `edit-${f.key}`, text: f.label }), inputs[f.key]);
   }
-  const values = () => Object.fromEntries(fields.map(f => [f.key, inputs[f.key].value.trim()]));
+  const values = () => Object.fromEntries(fields.map(f => [f.key, f.checkbox ? inputs[f.key].checked : inputs[f.key].value.trim()]));
   nodes.push(el("div", { class: "actions" }, [
     el("button", { type: "button", class: "primary", text: "Save", on: { click: async () => {
       status.textContent = "";
@@ -299,7 +309,8 @@ function renderOffers(projectId) {
       list.append(el("div", { class: "entry" }, [
         editor(offer, "offers", [
           { key: "details", label: "What you can offer", max: 1000, multiline: true },
-          { key: "available", label: "When you're available (optional)", max: 120 }
+          { key: "available", label: "When you're available (optional)", max: 120 },
+          { key: "contact_ok", label: "Other members may contact me about this offer through the site", checkbox: true }
         ], values => state.sb.from("offers").update(values).eq("id", offer.id))
       ]));
       continue;
@@ -308,8 +319,93 @@ function renderOffers(projectId) {
       el("p", { class: "meta-line", text: `${nameFor(offer.author_id, offer.anonymous)} offered ${label.toLowerCase()}` + fmtDate(offer.created_at) }),
       el("p", { class: "body", text: offer.details }),
       offer.available ? el("p", { class: "meta-line", text: "Available: " + offer.available }) : null,
+      el("p", { class: "meta-line", text: offer.contact_ok ? "Open to being contacted through the site" : "Not taking messages" }),
+      contactControls(offer),
       entryActions(offer, { onEdit: true, table: "offers" })
     ]));
+  }
+}
+
+// "Send a message" on someone else's offer, when they agreed to be contacted.
+function contactControls(offer) {
+  if (!state.user || !offer.contact_ok || offer.is_mine) return null;
+  if (state.composing !== offer.id) {
+    return el("div", { class: "actions entry-actions" }, [
+      el("button", { type: "button", class: "secondary", text: "Send a message", on: { click: () => { state.composing = offer.id; render(); } } })
+    ]);
+  }
+  const box = el("textarea", { maxlength: "1000", id: "compose-" + offer.id, "aria-label": "Your message", placeholder: "Say what you'd like to ask or arrange." });
+  const status = el("p", { class: "status", "aria-live": "polite" });
+  return el("div", { class: "editor" }, [
+    el("label", { for: "compose-" + offer.id, text: "Your message (your name is shown to them; no email addresses)" }),
+    box,
+    el("div", { class: "actions" }, [
+      el("button", { type: "button", class: "primary", text: "Send", on: { click: async () => {
+        const body = box.value.trim();
+        if (!body) { status.textContent = "Write a message first."; return; }
+        if (EMAIL_RE.test(body)) { status.textContent = "Messages can't include email addresses."; return; }
+        const { error } = await state.sb.rpc("send_message", { p_offer: offer.id, p_body: body });
+        if (error) { status.textContent = messageFor(error); return; }
+        state.composing = null;
+        await refresh();
+        setNotice("Message sent. You'll find the conversation under Messages.");
+      } } }),
+      el("button", { type: "button", class: "secondary", text: "Cancel", on: { click: () => { state.composing = null; render(); } } })
+    ]),
+    status
+  ]);
+}
+
+function renderMessages() {
+  const list = $("messages-list");
+  list.replaceChildren();
+  if (!state.user) { list.append(el("p", { class: "empty", text: "Sign in to see your messages." })); return; }
+  const threads = new Map();
+  for (const m of state.messages) {
+    const key = m.offer_id + ":" + m.asker_id;
+    if (!threads.has(key)) threads.set(key, []);
+    threads.get(key).push(m);
+  }
+  if (!threads.size) { list.append(el("p", { class: "empty", text: "No messages yet. On a project page, offers marked \"open to being contacted\" have a Send a message button." })); return; }
+  const projects = allProjects();
+  const ordered = [...threads.values()].sort((a, b) => byDate(b[b.length - 1], a[a.length - 1]));
+  for (const msgs of ordered) {
+    const first = msgs[0];
+    const project = projects[first.project_id];
+    const other = first.i_am_offerer ? nameFor(first.asker_id) : (first.offerer_id ? nameFor(first.offerer_id) : "Someone (anonymous offer)");
+    const thread = el("div", { class: "entry thread" }, [
+      el("p", { class: "domain", text: project ? project.title : "A project" }),
+      el("h3", { text: (first.i_am_offerer ? "About your offer, with " : "About an offer by ") + other })
+    ]);
+    for (const m of msgs) {
+      thread.append(el("div", { class: "message" + (m.from_me ? " mine" : "") }, [
+        el("p", { class: "meta-line", text: (m.from_me ? "You" : other) + fmtDate(m.created_at) }),
+        el("p", { class: "body", text: m.body }),
+        m.from_me || state.isAdmin ? el("div", { class: "actions entry-actions" }, [
+          el("button", { type: "button", class: "danger", text: "Delete", on: { click: async () => {
+            if (!window.confirm("Delete this message?")) return;
+            const { error } = await state.sb.rpc("delete_message", { p_id: m.id });
+            if (error) return setNotice(messageFor(error));
+            await refresh();
+          } } })
+        ]) : null
+      ]));
+    }
+    const box = el("textarea", { maxlength: "1000", "aria-label": "Reply", placeholder: "Write a reply" });
+    const status = el("p", { class: "status", "aria-live": "polite" });
+    thread.append(box, el("div", { class: "actions" }, [
+      el("button", { type: "button", class: "primary", text: "Reply", on: { click: async () => {
+        const body = box.value.trim();
+        if (!body) { status.textContent = "Write a reply first."; return; }
+        if (EMAIL_RE.test(body)) { status.textContent = "Messages can't include email addresses."; return; }
+        const { error } = first.i_am_offerer
+          ? await state.sb.rpc("reply_message", { p_offer: first.offer_id, p_asker: first.asker_id, p_body: body })
+          : await state.sb.rpc("send_message", { p_offer: first.offer_id, p_body: body });
+        if (error) { status.textContent = error.code === "42501" && !first.i_am_offerer ? "This person is no longer taking messages about this offer." : messageFor(error); return; }
+        await refresh();
+      } } })
+    ]), status);
+    list.append(thread);
   }
 }
 
@@ -435,9 +531,12 @@ function render() {
   renderAuth();
   const hash = decodeURIComponent(location.hash.slice(1));
   $("nav-review").hidden = !state.isAdmin;
+  $("nav-messages").hidden = !state.user;
+  $("nav-messages").textContent = state.messages.length ? `Messages (${new Set(state.messages.map(m => m.offer_id + ":" + m.asker_id)).size})` : "Messages";
   if (hash.startsWith("project-")) renderProject(hash.replace(/^project-/, ""));
   else if (hash === "suggest") { showView("suggest"); renderSuggest(); }
   else if (hash === "review") { showView("review"); renderReview(); }
+  else if (hash === "messages") { showView("messages"); renderMessages(); }
   else { showView("list"); renderList(); }
 }
 
@@ -490,13 +589,15 @@ function bindForms() {
       type: $("offer-type").value,
       details,
       available: $("offer-available").value.trim(),
-      anonymous: $("offer-anon").checked
+      anonymous: $("offer-anon").checked,
+      contact_ok: $("offer-contact").checked
     });
     $("offer-submit").disabled = false;
     if (error) { status.textContent = messageFor(error); return; }
     $("offer-details").value = "";
     $("offer-available").value = "";
     $("offer-anon").checked = false;
+    $("offer-contact").checked = false;
     status.textContent = "Thanks. Your offer is recorded and visible to people who can open this page.";
     await refresh();
   });
@@ -541,11 +642,13 @@ async function start() {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
   });
   bindForms();
-  window.addEventListener("hashchange", () => { state.editing = null; render(); });
+  window.addEventListener("hashchange", () => { state.editing = null; state.composing = null; render(); });
   // The INITIAL_SESSION event fires once on subscribe, so this also loads the signed-out view.
-  state.sb.auth.onAuthStateChange(async (_event, session) => {
+  // Supabase calls made inside this callback deadlock on the auth lock when a session exists,
+  // so the reload is deferred until the callback has returned.
+  state.sb.auth.onAuthStateChange((_event, session) => {
     state.user = session ? session.user : null;
-    await refresh();
+    setTimeout(refresh, 0);
   });
 }
 
