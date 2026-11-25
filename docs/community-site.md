@@ -67,9 +67,11 @@ on conflict do nothing;
 
 ## Useful Skills
 
-- 100 skills from the Art of Manliness list "100 Skills Every Man Should Know". The course text is
-  original and follows Tim Ferriss's DiSSS method: Deconstruction, Selection, Sequencing, Stakes.
-- 49 courses carry a safety note; first aid, firearms, chainsaws, boating and similar courses are
+- 150 skills. 1 to 100 follow the Art of Manliness list "100 Skills Every Man Should Know"; 101 to 150
+  round out the set from established programs, and each names its source (see `docs/skills-research.md`).
+  The course text is original and follows Tim Ferriss's DiSSS method: Deconstruction, Selection,
+  Sequencing, Stakes.
+- 60 courses carry a safety note; first aid, firearms, chainsaws, boating and similar courses are
   introductions that point to certified, hands-on training.
 - Picking a stake builds an email in the visitor's own email app (a `mailto:` link) with the stake,
   the deadline, a link to the course and a link to the community home page. The site never sees
@@ -79,7 +81,7 @@ on conflict do nothing;
 - Each course has two diagrams built from its own text, so they always match: the parts of the
   skill, and a learning-path flowchart of the steps ending at the stake. They follow the page's
   light or dark theme and have text labels for screen readers.
-- Each course has a Watch section. 97 courses link one or two YouTube videos (181 in all), found by
+- Each course has a Watch section. Most courses link one or two YouTube videos (266 in all), found by
   search, checked with YouTube's oEmbed service, and reviewed by hand. Safety-sensitive courses use
   official sources where possible (American Heart Association, American Red Cross, St John
   Ambulance, Parks Canada, STIHL, OSHA, Husqvarna, NSSF, BoatUS). Every course also has a
@@ -106,8 +108,9 @@ on conflict do nothing;
 - **Interview.** On the profile, each person answers five questions: age range (never an exact
   age), life stage, goals, time per week, and topics they'd rather not have suggested. Answers live
   in `skill_interviews`, readable and changeable only by that person, and can be changed any time.
-- **Skill tree.** 13 RPG-style branches (Survivor, Ranger, Explorer, Medic, Guardian, Builder,
-  Mechanic, Chef, Diplomat, Scholar, Athlete, Dapper, Entertainer), each with tiers. A skill
+- **Skill tree.** 18 RPG-style branches (Survivor, Ranger, Explorer, Medic, Guardian, Builder,
+  Mechanic, Chef, Provider, Diplomat, Counselor, Scholar, Athlete, Dapper, Steward, Maker, Keeper,
+  Entertainer), each with tiers. A skill
   unlocks once its prerequisites are completed or rated Practising or higher. Nodes show completed,
   in progress, ready, locked (with what to learn first) and level pips. Branch ranks: Untrained,
   Novice, Adept, Expert, Master. Locking never hides a course; every course stays open to read.

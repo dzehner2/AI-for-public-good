@@ -45,3 +45,5 @@
 .video-title { font-weight: 600; overflow-wrap: anywhere; }
 .video-channel { color: var(--muted); font-size: 0.9rem; }
 @media (max-width: 420px) { .video-link img { width: 112px; height: 63px; } }
+
+.course-source { font-size: 0.92rem; color: var(--muted); }

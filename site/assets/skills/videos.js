@@ -1403,5 +1403,680 @@ export const VIDEOS = {
     "channel": "TEDx Talks"
    }
   ]
+ },
+ "plan-a-week-of-meals": {
+  "q": "how to meal plan for the week beginner",
+  "list": [
+   {
+    "v": "r1OSDnCDoGQ",
+    "title": "MEAL PLANNING for Beginners | 6 Easy Steps",
+    "channel": "Meghan Livingstone"
+   }
+  ]
+ },
+ "practise-kitchen-food-safety": {
+  "q": "food safety clean separate cook chill",
+  "list": [
+   {
+    "v": "hZrDe7cP128",
+    "title": "Core 4 Overview Video: Clean, Separate, Cook, and Chill",
+    "channel": "Florida Department of Agriculture and Consumer Services"
+   }
+  ]
+ },
+ "bake-a-loaf-of-bread": {
+  "q": "how to bake a simple sandwich bread loaf beginner",
+  "list": [
+   {
+    "v": "YUiS0eIU9D0",
+    "title": "5 Ingredient NO KNEAD Homemade Sandwich Bread | SOFT for Days!",
+    "channel": "Emma's Goodies"
+   }
+  ]
+ },
+ "can-food-safely-in-a-water-bath": {
+  "q": "water bath canning for beginners tested recipe extension",
+  "list": [
+   {
+    "v": "2_6BUwS9iQQ",
+    "title": "How to Can Tomatoes in a Water Bath Canner",
+    "channel": "Ohio State University Extension"
+   }
+  ]
+ },
+ "freeze-and-store-food-properly": {
+  "q": "how to freeze food properly avoid freezer burn blanching",
+  "list": [
+   {
+    "v": "ptjDvF58hiM",
+    "title": "WHAT'S FREEZER BURN? And how to prevent it",
+    "channel": "Abbey the Food Scientist"
+   },
+   {
+    "v": "r5-akBNZouM",
+    "title": "The Best Way to Freeze Food: Longer Shelf Life and Rapid Defrosting",
+    "channel": "Serious Eats"
+   }
+  ]
+ },
+ "make-soup-from-scratch": {
+  "q": "how to make vegetable soup from scratch",
+  "list": [
+   {
+    "v": "SE-DptWxDKw",
+    "title": "Easy Vegetable Soup Recipe | Beyond Easy!",
+    "channel": "Preppy Kitchen"
+   },
+   {
+    "v": "LrKhcvZYFdQ",
+    "title": "Easy Vegetable Soup Recipe",
+    "channel": "Inspired Taste"
+   }
+  ]
+ },
+ "use-basic-knife-skills": {
+  "q": "basic knife skills how to dice an onion claw grip",
+  "list": [
+   {
+    "v": "BuebC0CfD8E",
+    "title": "Knife Skills: How to Slice and Dice an Onion",
+    "channel": "J. Kenji López-Alt"
+   },
+   {
+    "v": "aoqVGdmVlKk",
+    "title": "The Only Knife Skills Guide You Need",
+    "channel": "Joshua Weissman"
+   }
+  ]
+ },
+ "bake-a-pie-from-scratch": {
+  "q": "how to make pie crust from scratch all butter",
+  "list": [
+   {
+    "v": "aCFKEHSJmsI",
+    "title": "How to Make Flaky Butter Pie Crust | Allrecipes",
+    "channel": "Allrecipes"
+   }
+  ]
+ },
+ "read-a-nutrition-label": {
+  "q": "how to read a nutrition facts label FDA",
+  "list": [
+   {
+    "v": "PQsXHzSNKDk",
+    "title": "How to Read the Nutrition Label in 5 Steps [United States FDA Nutrition Facts Label]",
+    "channel": "Dietitian Success Center Inc."
+   },
+   {
+    "v": "hzwnwLgmFOQ",
+    "title": "How to read a nutrition facts label",
+    "channel": "Osmosis from Elsevier"
+   }
+  ]
+ },
+ "pack-a-healthy-lunch": {
+  "q": "how to pack a healthy lunch box",
+  "list": [
+   {
+    "v": "XpQ_SYmzIYs",
+    "title": "How To Pack A Healthy Lunch Box",
+    "channel": "Cancer Council NSW"
+   }
+  ]
+ },
+ "host-a-dinner-party": {
+  "q": "how to host a dinner party tips",
+  "list": [
+   {
+    "v": "YPjRcROWBpA",
+    "title": "How to Host an Unforgettable Dinner Party",
+    "channel": "Bon Appétit"
+   },
+   {
+    "v": "MADgmcg7bfA",
+    "title": "How To Host a STRESS-FREE DINNER PARTY | step by step guide and recipes",
+    "channel": "Emily Roz"
+   }
+  ]
+ },
+ "mend-and-hem-clothes": {
+  "q": "how to hem pants by hand slip stitch",
+  "list": [
+   {
+    "v": "MYsYLJfP_Og",
+    "title": "How to hand sew a hem - SLIP STITCH Tutorial",
+    "channel": "Retro Claude"
+   },
+   {
+    "v": "tR-hRs4_89w",
+    "title": "How to Hem Dress Pants by Hand Using Catch Stitch - Quick Tutorials",
+    "channel": "Downtown Tailoring"
+   }
+  ]
+ },
+ "use-a-sewing-machine": {
+  "q": "how to use a sewing machine for beginners",
+  "list": [
+   {
+    "v": "oD_KpZm7OaM",
+    "title": "A Beginner's Guide To SEWING! How to use a sewing machine",
+    "channel": "coolirpa"
+   },
+   {
+    "v": "7EgFm8Dor40",
+    "title": "How To Use Sewing Machine for Beginners | EP. 04",
+    "channel": "Glory Allan"
+   }
+  ]
+ },
+ "knit-a-scarf": {
+  "q": "how to knit a scarf for beginners garter stitch",
+  "list": [
+   {
+    "v": "p-WK7VveyqQ",
+    "title": "Knit a Garter Stitch Scarf",
+    "channel": "iknitwithcatfur"
+   },
+   {
+    "v": "ll4WwBxrmow",
+    "title": "How to Knit a Garter Stitch Scarf",
+    "channel": "Fiber Theory"
+   }
+  ]
+ },
+ "crochet-a-granny-square": {
+  "q": "granny square crochet tutorial beginner step by step",
+  "list": [
+   {
+    "v": "axV4cFeMlFY",
+    "title": "how to crochet a granny square for beginners ♡ no magic ring | easy crochet tutorial",
+    "channel": "ElyseCrochets 💌"
+   },
+   {
+    "v": "euqnRKNJaXo",
+    "title": "How to Crochet a Granny Square for Beginners *updated tutorial*",
+    "channel": "Maddy Marie"
+   }
+  ]
+ },
+ "do-laundry-and-remove-stains": {
+  "q": "how to do laundry sort wash stain removal basics",
+  "list": [
+   {
+    "v": "xEXLUc7-W0g",
+    "title": "Laundry Basics From A Dry Cleaner",
+    "channel": "Jeeves NY"
+   }
+  ]
+ },
+ "quilt-a-simple-block": {
+  "q": "how to sew a nine patch quilt block beginner",
+  "list": [
+   {
+    "v": "Quzu2H5xeGQ",
+    "title": "Nine Patch Quilting Block - Beginner Block Quilting Series",
+    "channel": "Missouri Star"
+   },
+   {
+    "v": "lPuEomkp0Wo",
+    "title": "🟥 The Easy Quilt Nine Patch Block 🟦 Quilt pattern for beginners 🟥 It really is easy! 🟩",
+    "channel": "The Sewing Studio"
+   }
+  ]
+ },
+ "clean-a-home-efficiently": {
+  "q": "how to clean your house efficiently routine",
+  "list": [
+   {
+    "v": "TqHX3pTeRdg",
+    "title": "Cleaning Expert: My Secret System to Cleaning Fast & Effectively!",
+    "channel": "Clean My Space"
+   }
+  ]
+ },
+ "declutter-and-organize-a-room": {
+  "q": "how to declutter a room step by step",
+  "list": [
+   {
+    "v": "KB1hNf4zQT4",
+    "title": "How to Start Decluttering Even When You're Overwhelmed",
+    "channel": "Dana K White"
+   },
+   {
+    "v": "K1QTidF8JX4",
+    "title": "To Declutter Faster, Start with What You Need",
+    "channel": "Joshua Becker"
+   }
+  ]
+ },
+ "care-for-houseplants": {
+  "q": "how to water houseplants beginner tips",
+  "list": [
+   {
+    "v": "jPOqMb0D4YQ",
+    "title": "How to Water Houseplants CORRECTLY | How-to Ep 19",
+    "channel": "Pretty in Green"
+   },
+   {
+    "v": "B7vHooC8Rk4",
+    "title": "5 Quick tips on watering your indoor plants",
+    "channel": "Swedish Plantguys"
+   }
+  ]
+ },
+ "arrange-flowers": {
+  "q": "how to arrange flowers in a vase beginner",
+  "list": [
+   {
+    "v": "58Oa8mEECDs",
+    "title": "Flower Arrangement Tutorial For Beginners | Grocery Store Flowers Tips",
+    "channel": "Aleexischristine"
+   },
+   {
+    "v": "G59HbMnLl9U",
+    "title": "How To Arrange Mixed Flowers In A Vase",
+    "channel": "Flower Joos"
+   }
+  ]
+ },
+ "compost-kitchen-scraps": {
+  "q": "how to compost at home for beginners",
+  "list": [
+   {
+    "v": "egyNJ7xPyoQ",
+    "title": "Beginner's Guide to Composting",
+    "channel": "Nelson City Council"
+   }
+  ]
+ },
+ "prepare-an-emergency-kit-and-plan": {
+  "q": "FEMA ready.gov build an emergency kit",
+  "list": [
+   {
+    "v": "o4enqHGluLI",
+    "title": "How to Prepare an Emergency Kit",
+    "channel": "FEMA"
+   }
+  ]
+ },
+ "make-a-monthly-budget": {
+  "q": "how to make a budget for beginners",
+  "list": [
+   {
+    "v": "7lHNMGoACdQ",
+    "title": "Budgeting for Beginners - How to Make a Budget From Scratch Today",
+    "channel": "Debt Free Millennials"
+   },
+   {
+    "v": "xfPbT7HPkKA",
+    "title": "Budgeting For Beginners | The Only Budgeting Method You Need To Worry About!",
+    "channel": "George Kamel"
+   }
+  ]
+ },
+ "build-an-emergency-fund": {
+  "q": "how to build an emergency fund",
+  "list": [
+   {
+    "v": "UE6PapZxYIs",
+    "title": "Build an Emergency Fund on a Low Income in 7 Steps!  |  Frugal Living Tips",
+    "channel": "Frugal Creative Living"
+   },
+   {
+    "v": "tVGJqaOkqac",
+    "title": "Emergency Funds 101: You’re Screwed If You Don’t Have One",
+    "channel": "George Kamel"
+   }
+  ]
+ },
+ "check-your-credit-report": {
+  "q": "how to check your credit report annualcreditreport",
+  "list": [
+   {
+    "v": "nL0IOkhrAYw",
+    "title": "How to Pull Free Credit Report from AnnualCreditReport.com",
+    "channel": "Upsolve"
+   }
+  ]
+ },
+ "compare-prices-and-unit-prices": {
+  "q": "unit price comparison grocery store save money",
+  "list": [
+   {
+    "v": "KMe85qahPbk",
+    "title": "Unit pricing helps you save money at the grocery store | Consumer Reports",
+    "channel": "Consumer Reports"
+   },
+   {
+    "v": "xdLTsKCc7RQ",
+    "title": "Unit pricing video",
+    "channel": "Consumer & Business Services"
+   }
+  ]
+ },
+ "understand-a-paycheck-and-taxes": {
+  "q": "how to read your pay stub explained",
+  "list": [
+   {
+    "v": "XQ0f87stf_o",
+    "title": "Understanding Your Paycheck",
+    "channel": "Paxton Patterson Labs  │  College & Career Ready"
+   },
+   {
+    "v": "-4qkis2FooU",
+    "title": "Here's How to Read a Pay Stub [With Sample Paycheck]",
+    "channel": "Gusto"
+   }
+  ]
+ },
+ "spot-and-avoid-scams": {
+  "q": "FTC how to spot a scam",
+  "list": [
+   {
+    "v": "IoKTR4QR6-w",
+    "title": "How to Report Fraud at ReportFraud.ftc.gov | Federal Trade Commission",
+    "channel": "FTCvideos"
+   },
+   {
+    "v": "THYmUx3ofJk",
+    "title": "How to Avoid a Tech Support Scam | Federal Trade Commission",
+    "channel": "FTCvideos"
+   }
+  ]
+ },
+ "start-saving-for-retirement": {
+  "q": "investor.gov compound interest retirement saving basics",
+  "list": [
+   {
+    "v": "R8xwUfr2St8",
+    "title": "Compound Interest and Investments",
+    "channel": "Justin Pritchard, CFP® on Retirement Planning"
+   }
+  ]
+ },
+ "babysit-safely": {
+  "q": "red cross babysitting basics tips",
+  "list": [
+   {
+    "v": "-sIMpZJaPZ4",
+    "title": "Babysitting Basics Online Course: Overview",
+    "channel": "American Red Cross"
+   }
+  ]
+ },
+ "feed-and-burp-a-baby": {
+  "q": "how to bottle feed and burp a baby",
+  "list": [
+   {
+    "v": "uuAXZjUgnog",
+    "title": "Burping your baby",
+    "channel": "Eugene Pediatric Associates"
+   },
+   {
+    "v": "PQccrk4GTlo",
+    "title": "How to Bottle Feed and Burp your Newborn Baby",
+    "channel": "Newborn Baby Videos"
+   }
+  ]
+ },
+ "plan-activities-for-kids": {
+  "q": "easy activities for kids at home babysitter ideas",
+  "list": [
+   {
+    "v": "le4yHFE0RQU",
+    "title": "Keep Kids Entertained While Babysitting- My Top 5 Favorite",
+    "channel": "Lydia Kutz"
+   },
+   {
+    "v": "NHwZh5FBukQ",
+    "title": "100 Things To Do With Kids Indoors",
+    "channel": "Wolfe Momma"
+   }
+  ]
+ },
+ "care-for-someone-who-is-sick": {
+  "q": "how to care for a sick person at home flu",
+  "list": [
+   {
+    "v": "Ktwsk1v2uYE",
+    "title": "Here’s what helps when you’re sick with the cold or flu",
+    "channel": "Scientific American"
+   }
+  ]
+ },
+ "help-someone-in-a-mental-health-crisis": {
+  "q": "mental health first aid how to help someone",
+  "list": [
+   {
+    "v": "K_6Q51ustYI",
+    "title": "Attending Mental Health First Aid Standard Course - What to expect",
+    "channel": "Mental Health First Aid International"
+   },
+   {
+    "v": "F2hc2FLOdhI",
+    "title": "How to practice emotional first aid | Guy Winch | TED",
+    "channel": "TED"
+   }
+  ]
+ },
+ "listen-actively": {
+  "q": "active listening skills explained",
+  "list": [
+   {
+    "v": "i3ku5nx4tMU",
+    "title": "4 things all great listeners know",
+    "channel": "TED-Ed"
+   },
+   {
+    "v": "Yq5pJ0q3xuc",
+    "title": "How to actively listen to others | Scott Pierce | TEDxBirmingham",
+    "channel": "TEDx Talks"
+   }
+  ]
+ },
+ "resolve-a-conflict-calmly": {
+  "q": "how to resolve conflict calmly i statements",
+  "list": [
+   {
+    "v": "jUF9sY4HvxY",
+    "title": "A hostage negotiator on how to resolve conflict | Karleen Savage | TEDxValparaisoUniversity",
+    "channel": "TEDx Talks"
+   },
+   {
+    "v": "gG25Kq_3gmg",
+    "title": "2 Minute Therapy- Positive Communication with I Statements",
+    "channel": "The Counseling Group PL"
+   }
+  ]
+ },
+ "comfort-someone-who-is-grieving": {
+  "q": "how to comfort someone who is grieving what to say",
+  "list": [
+   {
+    "v": "d8dK3zyrwDY",
+    "title": "How to Support and Comfort Someone Going Through Grief | Carolyn Moor | TEDxOaklandStudio",
+    "channel": "TEDx Talks"
+   },
+   {
+    "v": "pB1VwEk88xQ",
+    "title": "Some Practical Things You Can Do For Someone Grieving",
+    "channel": "Hospice Nurse Julie"
+   }
+  ]
+ },
+ "run-a-family-meeting": {
+  "q": "how to run a family meeting",
+  "list": [
+   {
+    "v": "kKt9X60uMOM",
+    "title": "How To Run A Family Meeting",
+    "channel": "Strong Medicine"
+   },
+   {
+    "v": "tChb29zIgXQ",
+    "title": "How To Carry Out A Family Meeting",
+    "channel": "Nicholeen Peck - Teaching Self Government"
+   }
+  ]
+ },
+ "set-boundaries-and-say-no": {
+  "q": "how to say no politely set boundaries",
+  "list": [
+   {
+    "v": "F2Zm1yx0Doo",
+    "title": "3 ways to set boundaries (without saying \"no\") | Raluca Hancu | TEDxHeilbronn",
+    "channel": "TEDx Talks"
+   }
+  ]
+ },
+ "introduce-people-to-each-other": {
+  "q": "how to introduce people etiquette",
+  "list": [
+   {
+    "v": "BgdkRwnA78M",
+    "title": "Social Etiquette : How to Introduce People",
+    "channel": "ehow"
+   },
+   {
+    "v": "5lN0Nt2HScE",
+    "title": "How to properly introduce yourself | The Etiquette of Proper  Introductions",
+    "channel": "From the Inside-Out School of Etiquette"
+   }
+  ]
+ },
+ "manage-your-time-with-a-weekly-plan": {
+  "q": "how to plan your week time management",
+  "list": [
+   {
+    "v": "C4AzJ7Xc7rA",
+    "title": "How to Plan Your Week | effective & balanced productivity system",
+    "channel": "Lavendaire"
+   },
+   {
+    "v": "gJ5Sr5pIBSU",
+    "title": "How to Plan Your Week Like a CEO",
+    "channel": "Dan Martell"
+   }
+  ]
+ },
+ "practise-mindful-breathing": {
+  "q": "mindful breathing exercise for beginners",
+  "list": [
+   {
+    "v": "wfDTp2GogaQ",
+    "title": "Mindful Breathing Exercise",
+    "channel": "Every Mind Matters"
+   },
+   {
+    "v": "LiUnFJ8P4gM",
+    "title": "4-7-8 Calm Breathing Exercise | 10 Minutes of Deep Relaxation | Anxiety Relief | Pranayama Exercise",
+    "channel": "Hands-On Meditation"
+   }
+  ]
+ },
+ "keep-a-journal": {
+  "q": "how to start journaling for beginners",
+  "list": [
+   {
+    "v": "MXITTbeLDfA",
+    "title": "JOURNALING FOR BEGINNERS ✨» Easy + Effortless \"How To\" Guide for Starting A Journal Today",
+    "channel": "Nae's Laugh"
+   },
+   {
+    "v": "KKkF07yP2CU",
+    "title": "How to Start Journaling for Beginners | 4 Journals That Will Change Your LIFE",
+    "channel": "Thvguci"
+   }
+  ]
+ },
+ "sketch-what-you-see": {
+  "q": "how to draw what you see beginner sketching",
+  "list": [
+   {
+    "v": "es19qOHykLg",
+    "title": "Beginners Guide. How to draw what you see",
+    "channel": "Arted by Alice ARCHIVE"
+   },
+   {
+    "v": "g7FxMiBFjqM",
+    "title": "How To Draw Literally Anything",
+    "channel": "goblish"
+   }
+  ]
+ },
+ "stretch-and-build-flexibility": {
+  "q": "beginner stretching routine full body",
+  "list": [
+   {
+    "v": "LnCQ-MECZSw",
+    "title": "10 Minute Beginner Full Body Stretch",
+    "channel": "Bob & Brad"
+   },
+   {
+    "v": "-SD_MucCa6c",
+    "title": "13 min. Full Body Stretch Routine For Tight Muscles| Beginner Friendly",
+    "channel": "Toni Mitchell"
+   }
+  ]
+ },
+ "walk-or-run-a-5k": {
+  "q": "couch to 5k beginner running tips",
+  "list": [
+   {
+    "v": "YACmfwcBDnM",
+    "title": "Couch To 5K: Week 1 | Starting Running For The First Time",
+    "channel": "Global Triathlon Network"
+   },
+   {
+    "v": "Q_jljyvWTgo",
+    "title": "Couch to 5K (how to succeed - beginners´ running tips)",
+    "channel": "Living your best life 101"
+   }
+  ]
+ },
+ "build-a-simple-skin-care-routine": {
+  "q": "american academy of dermatology basic skin care routine",
+  "list": [
+   {
+    "v": "dFfJBreYX_8",
+    "title": "Skin care on a budget: Dermatologist tips",
+    "channel": "American Academy of Dermatology"
+   },
+   {
+    "v": "Q8OdZQU7u-I",
+    "title": "Get the most from your skin care products",
+    "channel": "American Academy of Dermatology"
+   }
+  ]
+ },
+ "plan-a-wardrobe-on-a-budget": {
+  "q": "how to build a capsule wardrobe on a budget",
+  "list": [
+   {
+    "v": "SGROa-7J_uk",
+    "title": "How to Build a Capsule Wardrobe on a Budget",
+    "channel": "AskOkey"
+   },
+   {
+    "v": "uxhqi8uNauU",
+    "title": "How to Build a SIMPLE Capsule Wardrobe in 5 Easy Steps ✨ Minimalist Travel Capsule Wardrobe 2026",
+    "channel": "Miss Louie"
+   }
+  ]
+ },
+ "organize-a-community-event": {
+  "q": "how to organize a community event",
+  "list": [
+   {
+    "v": "0depZltCPyQ",
+    "title": "How to Organize a Community Event | Temple Art Market BTS",
+    "channel": "Life with Meagan"
+   },
+   {
+    "v": "i-tEIccrhY0",
+    "title": "How to host your next community event",
+    "channel": "Community Coach Carmen"
+   }
+  ]
  }
 };

@@ -4,7 +4,7 @@ import { SKILLS, CATEGORIES, GENERIC_STAKES } from "../site/assets/skills/index.
 import { VIDEOS } from "../site/assets/skills/videos.js";
 
 const problems = [];
-if (SKILLS.length !== 100) problems.push(`expected 100 skills, found ${SKILLS.length}`);
+if (SKILLS.length !== 150) problems.push(`expected 150 skills, found ${SKILLS.length}`);
 const ids = new Set();
 SKILLS.forEach((s, i) => {
   if (s.n !== i + 1) problems.push(`skill at position ${i + 1} is numbered ${s.n}`);

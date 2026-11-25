@@ -52,7 +52,7 @@ async function signIn(page) {
     check(`${label}: stats`, (await page.locator('#stat-completed').innerText()) === '1' && (await page.locator('#stat-progress').innerText()) === '1'
       && (await page.locator('#stat-rated').innerText()) === '3' && (await page.locator('#stat-teach').innerText()) === '1');
     check(`${label}: can-teach hint links to teacher sign-up`, await page.locator('#teach-hint').isVisible());
-    check(`${label}: all 100 skills listed`, (await page.locator('.skill-row').count()) === 100);
+    check(`${label}: all 150 skills listed`, (await page.locator('.skill-row').count()) === 150);
     check(`${label}: saved levels shown`, (await page.locator('#level-perform-cpr').inputValue()) === '1' && (await page.locator('#level-tell-a-joke').inputValue()) === '4');
     await page.getByRole('button', { name: 'Completed', exact: true }).click();
     check(`${label}: Completed filter`, (await page.locator('.skill-row').count()) === 1 && (await page.locator('.skill-row').innerText()).includes('Tie a Bowline'));

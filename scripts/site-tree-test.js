@@ -63,7 +63,7 @@ async function setup(browser, viewport, { interview, progress }) {
     const first = await recs.first().innerText();
     check(`${label}: first suggestion is first aid with reasons`, /medic/i.test(first) && /lifesaving|goal/i.test(first), first.split('\n').slice(0, 3).join(' / '));
     check(`${label}: suggestions explain why`, (await page.locator('#recommendations .reasons li').count()) >= 3);
-    check(`${label}: 13 branches in the tree`, (await page.locator('.branch').count()) === 13);
+    check(`${label}: 18 branches in the tree`, (await page.locator('.branch').count()) === 18);
     check(`${label}: completed skill shows as done`, (await page.locator('.node[data-skill="build-a-campfire"]').getAttribute('class')).includes('done'));
     check(`${label}: completing a prerequisite unlocks the next skill`, (await page.locator('.node[data-skill="make-fire-without-matches"]').getAttribute('class')).includes('available'));
     check(`${label}: unmet prerequisites lock a skill`, (await page.locator('.node[data-skill="survive-a-bear-attack"]').getAttribute('class')).includes('locked'));

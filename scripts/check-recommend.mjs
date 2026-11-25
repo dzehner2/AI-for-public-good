@@ -33,6 +33,12 @@ const survivor = BRANCHES.find(b => b.id === "survivor");
 ok(branchRank(P({}), survivor).title === "Untrained", "empty branch is Untrained");
 ok(branchRank(P({ "build-a-campfire": { completed_at: "x" } }), survivor).title === "Novice", "one completed skill makes a Novice");
 ok(recommend(SKILLS, null, P({})).length === 0, "no suggestions before the interview");
+const money = recommend(SKILLS, { age_band: "18-24", life_stages: ["starting-out"], goals: ["money"], weekly_time: "2-4h", skip: [] }, P({}));
+ok(money.some(r => r.skill.id === "make-a-monthly-budget"), "a money goal suggests making a budget: " + money.map(r => r.skill.id).join(", "));
+const maker = recommend(SKILLS, { age_band: "65+", life_stages: ["retired"], goals: ["make"], weekly_time: "5h+", skip: [] }, P({}));
+ok(maker.some(r => r.skill.cat === "Craft" || r.skill.id === "sew-a-button" || r.skill.id === "bake-a-loaf-of-bread"), "a making goal suggests a craft skill: " + maker.map(r => r.skill.id).join(", "));
+const sitter = recommend(SKILLS, { age_band: "13-17", life_stages: ["student"], goals: ["family"], weekly_time: "2-4h", skip: [] }, P({}), 10);
+ok(sitter.some(r => r.skill.id === "babysit-safely"), "a teen with a family goal is offered babysitting");
 
 if (problems.length) { console.log("FAIL " + problems.join("\nFAIL ")); process.exit(1); }
 console.log("All recommendation checks passed.");

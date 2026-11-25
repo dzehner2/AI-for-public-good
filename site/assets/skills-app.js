@@ -363,6 +363,7 @@ function renderCourse(id) {
     el("p", { class: "domain", text: `${skill.cat} · Skill ${skill.n} of ${SKILLS.length}` }),
     el("h1", { text: skill.name }),
     el("p", { class: "lede", text: "Time to learn: " + skill.time }),
+    skill.src ? el("p", { class: "course-source" }, ["Built on: ", skill.srcUrl ? el("a", { href: skill.srcUrl, target: "_blank", rel: "noopener noreferrer", text: skill.src }) : skill.src]) : null,
     skill.safety ? el("p", { class: "safety" }, [el("strong", { text: "Safety: " }), skill.safety]) : null,
     step("1. Deconstruction", "The parts this skill is made of.", skill.d, false),
     partsDiagram(skill),
