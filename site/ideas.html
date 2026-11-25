@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community Ideas Commons</title>
+<meta name="description" content="Projects and questions drawn from public sources on AI's water, energy, land, and community effects. Offer help, comment, or suggest a project.">
+<link rel="stylesheet" href="assets/ideas.css">
+<link rel="stylesheet" href="assets/ideas-extra.css">
+<link rel="icon" href="data:,">
+<script src="config.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Community Ideas Commons</h1>
+    <p class="lede">Projects and questions drawn from public sources on AI's water, energy, land, and community effects. Each project links to where it came from. Offer help, leave a comment, or suggest a new project for the team to review.</p>
+    <nav aria-label="Pages">
+      <a href="#">All projects</a>
+      <a href="#suggest">Suggest a project</a>
+      <a href="#review" id="nav-review" hidden>Review suggestions</a>
+    </nav>
+    <p class="note">Descriptions come from search results and public summaries, not full reading of each source. Check each source before relying on it.</p>
+    <div id="notice" class="notice" hidden></div>
+    <div id="auth" class="auth-panel"></div>
+  </header>
+
+  <!-- All projects -->
+  <section id="view-list" aria-label="Projects">
+    <div class="chips" id="chips" role="group" aria-label="Filter by area"></div>
+    <div class="grid" id="cards"></div>
+    <a class="card scratch" href="#project-scratchpad" style="margin-top:14px">
+      <p class="domain">General</p>
+      <h3>Scratch pad</h3>
+      <p class="summary">Open thoughts that don't fit a project yet. Post a note and see what others are noticing.</p>
+      <span class="more">Open the scratch pad</span>
+    </a>
+  </section>
+
+  <!-- One project -->
+  <section id="view-project" aria-live="off" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div id="project-head"></div>
+
+    <div class="panel" id="offer-panel">
+      <h2>Offer help</h2>
+      <p class="note">Offers are visible to signed-in people. Don't include contact details: the form blocks email addresses, and the site does not store contact details for anyone.</p>
+      <div id="offer-signin" class="status" hidden>Sign in to offer help.</div>
+      <form id="offer-form">
+        <label for="offer-type">What kind of help?</label>
+        <select id="offer-type">
+          <option value="time">Time</option>
+          <option value="expertise">Expertise</option>
+          <option value="resources">Resources</option>
+          <option value="ideas">Ideas</option>
+          <option value="network">Network</option>
+        </select>
+        <label for="offer-details">What you can offer</label>
+        <textarea id="offer-details" maxlength="1000" placeholder="For example: I can review the scoring method for two hours a month."></textarea>
+        <label for="offer-available">When you're available (optional)</label>
+        <input id="offer-available" maxlength="120" placeholder="For example: evenings">
+        <label class="check"><input type="checkbox" id="offer-anon"> Show my offer as "Someone"</label>
+        <div class="actions"><button type="submit" class="primary" id="offer-submit">Offer help</button></div>
+        <p class="status" id="offer-status" aria-live="polite"></p>
+      </form>
+      <h3 style="margin-top:18px">Offers so far</h3>
+      <div id="offers-list"></div>
+    </div>
+
+    <div class="panel" id="comment-panel">
+      <h2>Comments</h2>
+      <div id="comments-list"></div>
+      <div id="comment-signin" class="status" hidden>Sign in to comment.</div>
+      <form id="comment-form">
+        <label for="comment-text">Add a comment</label>
+        <textarea id="comment-text" maxlength="2000" placeholder="What do you know, what would you change, what is missing?"></textarea>
+        <div class="actions"><button type="submit" class="primary" id="comment-submit">Post comment</button></div>
+        <p class="status" id="comment-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Suggest a project -->
+  <section id="view-suggest" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div class="panel">
+      <h2>Suggest a project</h2>
+      <p class="note">The team reviews every suggestion. Approved projects appear on the list. Only you and the team can see a suggestion while it is waiting for review.</p>
+      <div id="suggest-signin" class="status" hidden>Sign in to suggest a project.</div>
+      <form id="suggest-form">
+        <label for="suggest-title">Project title</label>
+        <input id="suggest-title" maxlength="120" placeholder="A short name for the project">
+        <label for="suggest-domain">Area</label>
+        <select id="suggest-domain">
+          <option>Water</option>
+          <option>Air</option>
+          <option>Land</option>
+          <option>Energy</option>
+          <option>Community</option>
+          <option>Cognition</option>
+          <option>Other</option>
+        </select>
+        <label for="suggest-body">What is the project, and why does it matter?</label>
+        <textarea id="suggest-body" maxlength="1500"></textarea>
+        <label for="suggest-source">A public source (optional, starts with https://)</label>
+        <input id="suggest-source" maxlength="300" placeholder="https://">
+        <label for="suggest-help">What help would it need?</label>
+        <textarea id="suggest-help" maxlength="600"></textarea>
+        <div class="actions"><button type="submit" class="primary" id="suggest-submit">Send suggestion</button></div>
+        <p class="status" id="suggest-status" aria-live="polite"></p>
+      </form>
+      <div id="my-suggestions"></div>
+    </div>
+  </section>
+
+  <!-- Team review -->
+  <section id="view-review" hidden>
+    <a class="back" href="#">Back to all projects</a>
+    <div class="panel">
+      <h2>Review suggestions</h2>
+      <p class="note">Approving a suggestion adds it to the project list. Declining keeps it on record. Only the team admin sees these controls.</p>
+      <div id="review-list"></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

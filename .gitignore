@@ -4,3 +4,6 @@ scout/inbox.jsonl
 scout/seen.json
 # Offers hold personal information. Keep them out of git and back them up somewhere private.
 offers/
+
+# Build output. It holds the generated config, so keep it out of git.
+public/
