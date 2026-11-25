@@ -68,3 +68,23 @@ export async function loadName(sb, userId) {
   const { data } = await sb.from("profiles").select("name").eq("id", userId).maybeSingle();
   return data && data.name ? data.name : "";
 }
+
+export async function loadInterview(sb) {
+  const { data, error } = await sb.from("skill_interviews").select("age_band, life_stages, goals, weekly_time, skip").maybeSingle();
+  if (error) throw error;
+  return data || null;
+}
+
+export async function saveInterview(sb, userId, answers) {
+  const record = {
+    user_id: userId,
+    age_band: answers.age_band || null,
+    life_stages: answers.life_stages || [],
+    goals: answers.goals || [],
+    weekly_time: answers.weekly_time || null,
+    skip: answers.skip || []
+  };
+  const { error } = await sb.from("skill_interviews").upsert(record, { onConflict: "user_id" });
+  if (error) throw error;
+  return record;
+}

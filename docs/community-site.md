@@ -8,6 +8,7 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 - `site/ideas.html` and `site/assets/`: the project list, project pages, comments, offers and suggestions.
 - `site/skills.html`, `site/assets/skills-app.js` and `site/assets/skills/`: Useful Skills, 100 DiSSS courses. No sign-in or database.
 - `site/profile.html`, `site/assets/profile-app.js` and `site/assets/progress.js`: the private skills profile and course progress.
+- `site/assets/skills/tree.js` and `site/assets/recommend.js`: the skill tree, interview options, and the rules for suggesting what to learn next.
 - `site/teach.html`: holding page for teacher sign-up (the interview is on the roadmap).
 - `site/assets/vendor/supabase.esm.js`: the Supabase browser library, bundled locally (supabase-js 2.45.4, MIT).
 - `scripts/build.mjs`: copies `site/` to `public/` and writes `config.js` from environment variables.
@@ -16,6 +17,7 @@ The site is static HTML, CSS and JavaScript in `site/`. Supabase holds the data.
 - `supabase/tests/offer_privacy_test.sql` and `supabase/tests/contact_test.sql`: anonymous offers, the hot rule, and private messages.
 - `scripts/site-smoke-test.js`: browser smoke test for the signed-out experience. It mocks the Supabase requests.
 - `supabase/tests/skill_progress_test.sql` and `scripts/site-profile-test.js`: profile privacy and the profile and course-progress screens.
+- `supabase/tests/skill_interview_test.sql`, `scripts/check-recommend.mjs` and `scripts/site-tree-test.js`: interview privacy, the suggestion rules, and the tree and interview screens.
 - `scripts/check-skills.mjs` and `scripts/site-skills-test.js`: course data checks and a browser test for Useful Skills.
 - `docs/scout-agent.md`: instructions for the daily Scout agent.
 - `scripts/site-signed-in-test.js`: browser test for signed-in screens (offer contact choice and messages), with a fake session and mocked requests.
@@ -98,3 +100,22 @@ on conflict do nothing;
   rows. Nothing is shown to other members or the admin. Making levels or badges public is an owner
   decision on the roadmap.
 - Signed-out visitors can still read every course; they see a link to sign in to track progress.
+
+## Skill tree and suggestions
+
+- **Interview.** On the profile, each person answers five questions: age range (never an exact
+  age), life stage, goals, time per week, and topics they'd rather not have suggested. Answers live
+  in `skill_interviews`, readable and changeable only by that person, and can be changed any time.
+- **Skill tree.** 13 RPG-style branches (Survivor, Ranger, Explorer, Medic, Guardian, Builder,
+  Mechanic, Chef, Diplomat, Scholar, Athlete, Dapper, Entertainer), each with tiers. A skill
+  unlocks once its prerequisites are completed or rated Practising or higher. Nodes show completed,
+  in progress, ready, locked (with what to learn first) and level pips. Branch ranks: Untrained,
+  Novice, Adept, Expert, Master. Locking never hides a course; every course stays open to read.
+- **What to learn next.** Three suggestions, each with its reasons. Courses you've started come
+  first, then skills that fit your goals (strongest), life stage, and age range, with a boost for
+  first aid when you care for others, a preference for unlocked and foundation skills, and quicker
+  courses if you have about an hour a week.
+- **Safety.** Under-18s are never suggested firearms, hunting, chainsaws, motorcycles, alcohol or
+  massage. Anything a person asks to skip is never suggested. Both show greyed out in the tree.
+- The rules are plain code in `site/assets/recommend.js` and are tested with sample people in
+  `scripts/check-recommend.mjs`. Change the lists in `site/assets/skills/tree.js` to tune them.

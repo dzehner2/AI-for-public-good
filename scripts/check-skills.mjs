@@ -36,3 +36,38 @@ for (const s of firstAid) if (!s.safety) problems.push(`${s.id}: first aid cours
 console.log(`${SKILLS.length} skills, ${SKILLS.filter(s => s.safety).length} with safety notes, ${new Set(SKILLS.map(s => s.cat)).size} categories, ${Object.values(VIDEOS).reduce((n, v) => n + v.list.length, 0)} videos`);
 if (problems.length) { console.log(problems.join("\n")); process.exit(1); }
 console.log("All skill checks passed.");
+
+// ---------- Skill tree and interview data ----------
+const tree = await import("../site/assets/skills/tree.js");
+const treeProblems = [];
+const placed = new Map();
+for (const b of tree.BRANCHES) b.tiers.forEach((t, i) => t.forEach(id => {
+  if (placed.has(id)) treeProblems.push(`${id} is in the tree twice`);
+  placed.set(id, { branch: b.id, tier: i + 1 });
+}));
+for (const s of SKILLS) if (!placed.has(s.id)) treeProblems.push(`${s.id} is missing from the tree`);
+for (const id of placed.keys()) if (!ids.has(id)) treeProblems.push(`tree has unknown skill ${id}`);
+for (const [id, reqs] of Object.entries(tree.REQUIRES)) {
+  if (!ids.has(id)) treeProblems.push(`REQUIRES has unknown skill ${id}`);
+  for (const r of reqs) {
+    if (!ids.has(r)) treeProblems.push(`${id} requires unknown ${r}`);
+    const a = placed.get(id), b = placed.get(r);
+    if (a && b && a.branch === b.branch && b.tier >= a.tier) treeProblems.push(`${id} requires ${r} from the same or a later tier`);
+  }
+}
+const visiting = new Set(), visited = new Set();
+function visit(id, path) {
+  if (visiting.has(id)) { treeProblems.push("prerequisite loop: " + [...path, id].join(" -> ")); return; }
+  if (visited.has(id)) return;
+  visiting.add(id);
+  for (const r of tree.REQUIRES[id] || []) visit(r, [...path, id]);
+  visiting.delete(id); visited.add(id);
+}
+for (const id of Object.keys(tree.REQUIRES)) visit(id, []);
+for (const group of [tree.LIFE_STAGES, tree.GOALS, tree.SKIP_OPTIONS])
+  for (const g of group) for (const id of g.skills) if (!ids.has(id)) treeProblems.push(`${g.id} lists unknown skill ${id}`);
+for (const id of tree.ADULT_ONLY) if (!ids.has(id)) treeProblems.push(`ADULT_ONLY lists unknown skill ${id}`);
+for (const [band, list] of Object.entries(tree.AGE_NUDGE)) for (const id of list) if (!ids.has(id)) treeProblems.push(`AGE_NUDGE ${band} lists unknown ${id}`);
+console.log(`${tree.BRANCHES.length} branches, ${Object.keys(tree.REQUIRES).length} prerequisite links`);
+if (treeProblems.length) { console.log(treeProblems.join("\n")); process.exit(1); }
+console.log("Skill tree checks passed.");

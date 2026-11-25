@@ -54,6 +54,29 @@
       <p><button type="button" class="secondary" id="sign-out">Sign out</button></p>
     </div>
 
+    <section class="panel" id="interview" aria-labelledby="interview-title">
+      <h2 id="interview-title">About you</h2>
+      <div id="interview-body"></div>
+    </section>
+
+    <section id="next-up" aria-labelledby="next-title">
+      <h2 id="next-title">What to learn next</h2>
+      <div id="recommendations" class="recs"></div>
+    </section>
+
+    <section id="tree-section" aria-labelledby="tree-title">
+      <h2 id="tree-title">Your skill tree</h2>
+      <p class="note">Each branch levels up as you complete its courses. A skill unlocks once you complete, or rate yourself Practising in, the skills before it. Every course stays open to read.</p>
+      <ul class="tree-legend" aria-label="Legend">
+        <li><span class="node-dot done"></span>Completed</li>
+        <li><span class="node-dot progress"></span>In progress</li>
+        <li><span class="node-dot available"></span>Ready to learn</li>
+        <li><span class="node-dot locked"></span>Locked</li>
+      </ul>
+      <div id="skill-tree" class="skill-tree"></div>
+    </section>
+
+    <h2 class="all-skills-title">All skills</h2>
     <details class="disss">
       <summary>How levels work</summary>
       <ul>
